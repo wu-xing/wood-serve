@@ -5,12 +5,12 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"jellyfish/models"
 	"net/http"
+	"wood-serve/models"
 
 	"github.com/dchest/captcha"
 
-	"fmt"
+	// "fmt"
 
 	"github.com/labstack/echo"
 )
@@ -33,8 +33,7 @@ func SignUp(db *sql.DB) echo.HandlerFunc {
 		user.Password = request.Password
 
 		if !captcha.VerifyString(request.CaptchaId, request.Captcha) {
-			fmt.Println(request)
-			return c.NoContent(http.StatusUnauthorized)
+			return c.NoContent(http.StatusBadRequest)
 		} else {
 			_, error := models.CreateUser(db, &user)
 			if error == nil {
@@ -60,7 +59,7 @@ func SignIn(db *sql.DB) echo.HandlerFunc {
 		isExist := models.CheckUserExist(db, request.Username)
 
 		if !isExist {
-			return c.JSON(http.StatusBadRequest, "")
+			return c.JSON(http.StatusBadRequest, "User do not exist")
 		}
 
 		user, err := models.GetUserWhenCompareHashAndPassword(db, request.Username, request.Password)

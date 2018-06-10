@@ -67,11 +67,11 @@ func main() {
 	r := e.Group("/auth")
 	r.Use(middleware.JWT([]byte("secret")))
 
-	r.GET("/articles", handlers.GetTodos(db))
-	r.POST("/todo", handlers.PostTodo(db))
-	r.DELETE("/todo/:id", handlers.DeleteTodo(db))
-	r.PUT("/todo/:id", handlers.PutTodo(db))
+	r.GET("/articles", handlers.GetArticles(db))
+	r.POST("/article", handlers.PostArticle(db))
+	r.DELETE("/article/:id", handlers.DeleteArticle(db))
+	r.PUT("/article/:id", handlers.PutArticle(db))
 
-	fmt.Println("jellyfish serve on http://0.0.0.0:8000")
-	e.Logger.Fatal(e.Start("0.0.0.0:8000"))
+	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
+	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
 }

@@ -10,6 +10,7 @@ import (
 // Task is a struct containing Task data
 type Article struct {
 	ID        int    `json:"id"`
+	Title     string `json:"title"`
 	Content   string `json:"content"`
 	Status    string `json:"status"`
 	CreaterId string `json:"createrId"`
@@ -22,7 +23,7 @@ type ArticleCollection struct {
 }
 
 func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
-	sql := "SELECT id, content, status, created_at FROM articles where creater_id = ?"
+	sql := "SELECT id, content, title, status, created_at FROM articles where creater_id = ?"
 	rows, err := db.Query(sql, userId)
 	defer rows.Close()
 
@@ -35,7 +36,7 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 	for rows.Next() {
 		article := Article{}
 		var createdAt time.Time
-		err2 := rows.Scan(&article.ID, &article.Content, &article.Status, &createdAt)
+		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &createdAt)
 		article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
 
 		if err2 != nil {
@@ -77,7 +78,7 @@ func UpdateArticle(db *sql.DB, article *Article) (int64, error) {
 
 // PutTask into DB
 func CreateArticle(db *sql.DB, article *Article) (int64, error) {
-	sql := "INSERT INTO articles(content, creater_id, status, created_at) VALUES(?, ?, ?, ?)"
+	sql := "INSERT INTO articles(content, title, creater_id, status, created_at) VALUES(?, ?, ?, ?, ?)"
 
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
@@ -88,7 +89,7 @@ func CreateArticle(db *sql.DB, article *Article) (int64, error) {
 	// Make sure to cleanup after the program exits
 	defer stmt.Close()
 
-	result, err2 := stmt.Exec(article.Content, article.CreaterId, article.Status, time.Now().UnixNano()/int64(time.Millisecond))
+	result, err2 := stmt.Exec(article.Content, article.Title, article.CreaterId, article.Status, time.Now().UnixNano()/int64(time.Millisecond))
 
 	// Exit if we get an error
 	if err2 != nil {

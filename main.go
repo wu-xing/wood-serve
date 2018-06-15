@@ -22,6 +22,7 @@ func migrate(db *sql.DB) {
     CREATE TABLE IF NOT EXISTS articles(
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         creater_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
         content TEXT NOT NULL,
         status TEXT,
         created_at DATE,

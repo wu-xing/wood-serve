@@ -9,7 +9,7 @@ import (
 
 // Task is a struct containing Task data
 type Article struct {
-	ID        int    `json:"id"`
+	ID        string `json:"id"`
 	Title     string `json:"title"`
 	Content   string `json:"content"`
 	Status    string `json:"status"`
@@ -60,7 +60,7 @@ func GetArticle(db *sql.DB, articleId string) Article {
 }
 
 func UpdateArticle(db *sql.DB, article *Article) (int64, error) {
-	sql := "UPDATE articles set content = ?, detail = ?, done = ?, deadline = ?, status = ?, updated_at = ? where id = ?"
+	sql := "UPDATE articles set content = ?, title = ?, updated_at = ? where id = ?"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		panic(err)
@@ -68,7 +68,7 @@ func UpdateArticle(db *sql.DB, article *Article) (int64, error) {
 
 	defer stmt.Close()
 
-	result, err2 := stmt.Exec(article.Content, article.Status, time.Now().UnixNano()/int64(time.Millisecond), article.ID)
+	result, err2 := stmt.Exec(article.Content, article.Title, time.Now().UnixNano()/int64(time.Millisecond), article.ID)
 
 	if err2 != nil {
 		panic(err2)

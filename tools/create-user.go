@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"jellyfish/database"
-	"jellyfish/models"
 	"os"
+	"wood-serve/database"
+	"wood-serve/models"
 )
 
 func main() {

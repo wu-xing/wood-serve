@@ -38,6 +38,14 @@ func migrate(db *sql.DB) {
         updated_at DATE
     );
 
+    CREATE TABLE IF NOT EXISTS images(
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        creator INTEGER NOT NULL,
+        filename TEXT NOT NULL,
+        created_at DATE
+    );
+
+
     `
 	_, err := db.Exec(sql)
 
@@ -57,6 +65,8 @@ func readConfg() {
 }
 
 func main() {
+	readConfg()
+
 	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
 	defer db.Close()
 

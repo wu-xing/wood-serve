@@ -7,7 +7,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"strings"
+	"time"
 
 	"bytes"
 	"github.com/dgrijalva/jwt-go"
@@ -17,10 +19,8 @@ import (
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
-	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 )
 
 func GetMD5Hash(text string) string {
@@ -46,15 +46,15 @@ func saveImageToDisk(fileNameBase, data string) (string, error) {
 		return "", err
 	}
 	// _, fm, err := image.DecodeConfig(bytes.NewReader(buff.Bytes()))
-	_, fm, err := image.DecodeConfig(bytes.NewReader(buff.Bytes()))
+	_, _, err = image.DecodeConfig(bytes.NewReader(buff.Bytes()))
 	if err != nil {
 		return "", err
 	}
 
-	fileName := fileNameBase + "." + fm
+	fileName := fileNameBase
 	ioutil.WriteFile(fileName, buff.Bytes(), 0644)
 
-	return fm, err
+	return fileName, err
 }
 
 func PostAvatarByBase64(db *sql.DB) echo.HandlerFunc {
@@ -64,20 +64,21 @@ func PostAvatarByBase64(db *sql.DB) echo.HandlerFunc {
 		userId := claims["id"].(string)
 
 		request := new(struct {
-			Avatar string `json:"avatar"`
+			Image string `json:"image"`
 		})
 
 		c.Bind(&request)
 
-		avatardir := viper.GetString("avatardir")
-		fileNameHash := GetMD5Hash(request.Avatar)
+		imagedir := viper.GetString("imagedir")
 
-		fm, err := saveImageToDisk(avatardir+fileNameHash, request.Avatar)
+		fileNameHash := GetMD5Hash(request.Image)
+
+		fileName, err := saveImageToDisk(imagedir+fileNameHash, request.Image)
 		if err != nil {
 			panic(err)
 		}
 
-		sql := "UPDATE users set avatar = ? where id = ?"
+		sql := "INSERT INTO images(creator, filename, created_at) VALUES(?, ?, ?)"
 
 		stmt, err2 := db.Prepare(sql)
 
@@ -86,99 +87,14 @@ func PostAvatarByBase64(db *sql.DB) echo.HandlerFunc {
 		}
 
 		defer stmt.Close()
-		_, err3 := stmt.Exec(fileNameHash+"."+fm, userId)
+		_, err3 := stmt.Exec(userId, fileNameHash, time.Now().UnixNano()/int64(time.Millisecond))
 		if err3 != nil {
 			panic(err3)
 		}
 
 		return c.JSON(http.StatusOK, map[string]string{
-			"avatar": avatardir + fileNameHash + "." + fm,
+			"image": fileName,
 		})
 
-	}
-}
-
-func GetUserInfo(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		userId := c.Param("userId")
-
-		sql := "SELECT username, avatar FROM users where id = ?"
-		row := db.QueryRow(sql, userId)
-
-		userInfo := new(struct {
-			Username string `json:"username"`
-			Avatar   string `json:"avatar"`
-		})
-		avatardir := viper.GetString("avatardir")
-
-		err := row.Scan(&userInfo.Username, &userInfo.Avatar)
-		if err != nil {
-			panic(err)
-		}
-		userInfo.Avatar = avatardir + userInfo.Avatar
-		return c.JSON(http.StatusOK, userInfo)
-	}
-}
-
-func PostAvatar(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user := c.Get("user").(*jwt.Token)
-		claims := user.Claims.(jwt.MapClaims)
-		userId := claims["id"].(string)
-
-		form, err := c.MultipartForm()
-
-		if err != nil {
-			return err
-		}
-		files := form.File["avatar"]
-
-		if len(files) != 1 {
-			return c.NoContent(http.StatusBadRequest)
-		}
-
-		for _, file := range files {
-			// Source
-			src, err := file.Open()
-			if err != nil {
-				return err
-			}
-			defer src.Close()
-
-			avatardir := viper.GetString("avatardir")
-
-			fileNameHash := GetMD5Hash(file.Filename)
-
-			// Destination
-			dst, err := os.Create(avatardir + fileNameHash)
-			if err != nil {
-				return err
-			}
-			defer dst.Close()
-
-			// Copy
-			if _, err = io.Copy(dst, src); err != nil {
-				return err
-			}
-
-			sql := "UPDATE users set avatar = ? where id = ?"
-
-			stmt, err2 := db.Prepare(sql)
-
-			if err2 != nil {
-				panic(err2)
-			}
-
-			defer stmt.Close()
-			_, err3 := stmt.Exec(fileNameHash, userId)
-			if err3 != nil {
-				panic(err3)
-			}
-
-			return c.JSON(http.StatusOK, map[string]string{
-				"avatar": avatardir + fileNameHash,
-			})
-		}
-		return c.NoContent(http.StatusBadRequest)
 	}
 }

@@ -7,11 +7,17 @@ import (
 	"wood-serve/database"
 	"wood-serve/handlers"
 
+	"github.com/robfig/cron"
+
 	"fmt"
 	"github.com/dchest/captcha"
+	"github.com/dimiro1/banner"
+	"github.com/mattn/go-colorable"
 
+	"bytes"
 	_ "github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
+	// "os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -29,6 +35,14 @@ func migrate(db *sql.DB) {
         created_at DATE,
         updated_at DATE
     );
+
+CREATE TABLE IF NOT EXISTS articles_history (
+article_id INTEGER NOT NULL,
+date DATE NOT NULL,
+title TEXT NOT NULL,
+content TEXT NOT NULL,
+PRIMARY KEY(article_id, date)
+);
 
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -65,6 +79,11 @@ func readConfg() {
 }
 
 func main() {
+	isEnabled := true
+	isColorEnabled := true
+	banner.Init(colorable.NewColorableStdout(), isEnabled, isColorEnabled, bytes.NewBufferString(" ▄▀▀▄    ▄▀▀▄  ▄▀▀▀▀▄   ▄▀▀▀▀▄   ▄▀▀█▄▄\n█   █    ▐  █ █      █ █      █ █ ▄▀   █ \n▐  █        █ █      █ █      █ ▐ █    █\n█   ▄    █  ▀▄    ▄▀ ▀▄    ▄▀   █    █\n▀▄▀ ▀▄ ▄▀    ▀▀▀▀     ▀▀▀▀    ▄▀▄▄▄▄▀ \n▀                      █     ▐  \n▐"))
+	fmt.Println("")
+
 	readConfg()
 
 	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
@@ -100,4 +119,7 @@ func main() {
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
 
+	c := cron.New()
+	c.AddFunc("0 1 * * *", func() { fmt.Println("Every day") })
+	c.Start()
 }

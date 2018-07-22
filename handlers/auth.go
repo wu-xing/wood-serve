@@ -76,7 +76,6 @@ func SignIn(db *sql.DB) echo.HandlerFunc {
 		claims["exp"] = time.Now().Add(time.Hour * 24 * 30).Unix()
 
 		// TODO replace secret
-
 		t, err := token.SignedString([]byte("secret"))
 
 		if err != nil {

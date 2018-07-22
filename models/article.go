@@ -78,7 +78,7 @@ func UpdateArticle(db *sql.DB, article *Article) (int64, error) {
 
 // PutTask into DB
 func CreateArticle(db *sql.DB, article *Article) (int64, error) {
-	sql := "INSERT INTO articles(content, title, creater_id, status, created_at) VALUES(?, ?, ?, ?, ?)"
+	sql := "INSERT INTO articles(content, title, creater_id, status, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?)"
 
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
@@ -89,7 +89,7 @@ func CreateArticle(db *sql.DB, article *Article) (int64, error) {
 	// Make sure to cleanup after the program exits
 	defer stmt.Close()
 
-	result, err2 := stmt.Exec(article.Content, article.Title, article.CreaterId, article.Status, time.Now().UnixNano()/int64(time.Millisecond))
+	result, err2 := stmt.Exec(article.Content, article.Title, article.CreaterId, article.Status, time.Now().UnixNano()/int64(time.Millisecond), time.Now().UnixNano()/int64(time.Millisecond))
 
 	// Exit if we get an error
 	if err2 != nil {

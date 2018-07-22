@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"wood-serve/database"
 	"wood-serve/handlers"
+	"wood-serve/schedulers"
 
 	"github.com/robfig/cron"
 
@@ -36,13 +37,12 @@ func migrate(db *sql.DB) {
         updated_at DATE
     );
 
-CREATE TABLE IF NOT EXISTS articles_history (
-article_id INTEGER NOT NULL,
-date DATE NOT NULL,
-title TEXT NOT NULL,
-content TEXT NOT NULL,
-PRIMARY KEY(article_id, date)
-);
+    CREATE TABLE IF NOT EXISTS articles_history (
+        article_id INTEGER NOT NULL,
+        date DATE NOT NULL,
+        content TEXT NOT NULL,
+        PRIMARY KEY(article_id, date)
+    );
 
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -58,8 +58,6 @@ PRIMARY KEY(article_id, date)
         filename TEXT NOT NULL,
         created_at DATE
     );
-
-
     `
 	_, err := db.Exec(sql)
 
@@ -117,9 +115,12 @@ func main() {
 	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
 
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
-	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
 
 	c := cron.New()
-	c.AddFunc("0 1 * * *", func() { fmt.Println("Every day") })
+	c.AddFunc("0 1 * * *", func() { // every day 1 am
+		schedulers.LogArticleHistory(db)
+	})
 	c.Start()
+
+	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
 }

@@ -63,5 +63,4 @@ func LogArticleHistory(db *sql.DB) {
 		}
 		fmt.Println("article write history successful. article.id = ", element.ID, " date = ", tString)
 	}
-
 }

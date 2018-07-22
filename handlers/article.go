@@ -33,6 +33,15 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
+func GetArticleHistory(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		articleId := c.Param("articleId")
+
+		days := models.GetArticleHistoryDay(db, articleId)
+		return c.JSON(http.StatusOK, days)
+	}
+}
+
 func PutArticle(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		article := new(models.Article)

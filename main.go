@@ -39,7 +39,7 @@ func migrate(db *sql.DB) {
 
     CREATE TABLE IF NOT EXISTS articles_history (
         article_id INTEGER NOT NULL,
-        date DATE NOT NULL,
+        date CHAR(20) NOT NULL,
         content TEXT NOT NULL,
         PRIMARY KEY(article_id, date)
     );
@@ -112,12 +112,14 @@ func main() {
 	r.DELETE("/article/:id", handlers.DeleteArticle(db))
 	r.PUT("/article/:id", handlers.PutArticle(db))
 
+	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
+
 	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
 
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	c := cron.New()
-	c.AddFunc("0 1 * * *", func() { // every day 1 am
+	c.AddFunc("0 1 * *", func() { // every day 1 am
 		schedulers.LogArticleHistory(db)
 	})
 	c.Start()

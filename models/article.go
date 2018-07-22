@@ -59,6 +59,28 @@ func GetArticle(db *sql.DB, articleId string) Article {
 	return article
 }
 
+func GetArticleHistoryDay(db *sql.DB, articleId string) []string {
+	sql := "SELECT date FROM articles_history WHERE article_id = ?"
+	rows, err := db.Query(sql, articleId)
+	defer rows.Close()
+
+	dayCollection := make([]string, 0)
+	if err != nil {
+		panic(err)
+	}
+
+	for rows.Next() {
+		var day string
+		err2 := rows.Scan(&day)
+
+		if err2 != nil {
+			panic(err2)
+		}
+		dayCollection = append(dayCollection, day)
+	}
+	return dayCollection
+}
+
 func UpdateArticle(db *sql.DB, article *Article) (int64, error) {
 	sql := "UPDATE articles set content = ?, title = ?, updated_at = ? where id = ?"
 	stmt, err := db.Prepare(sql)

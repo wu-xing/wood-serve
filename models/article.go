@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -45,6 +46,16 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 		articleCollection.Articles = append(articleCollection.Articles, article)
 	}
 	return articleCollection
+}
+
+func CheckArticleBelong(db *sql.DB, articleId string, userId string) bool {
+	sql := "SELECT id FROM articles WHERE id = ? and creater_id = ?"
+	row := db.QueryRow(sql, articleId, userId)
+
+	var id string
+	err := row.Scan(&id)
+	fmt.Println(err)
+	return err == nil
 }
 
 func GetArticle(db *sql.DB, articleId string) Article {

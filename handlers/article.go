@@ -35,7 +35,16 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 
 func GetArticleHistory(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		jwtUserId := claims["id"].(string)
+
 		articleId := c.Param("articleId")
+		isBelong := models.CheckArticleBelong(db, articleId, jwtUserId)
+		if !isBelong {
+			return c.NoContent(http.StatusUnauthorized)
+		}
 
 		days := models.GetArticleHistoryDay(db, articleId)
 		return c.JSON(http.StatusOK, days)

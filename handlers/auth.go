@@ -9,6 +9,7 @@ import (
 	"wood-serve/models"
 
 	"github.com/dchest/captcha"
+	"github.com/spf13/viper"
 
 	// "fmt"
 
@@ -31,6 +32,12 @@ func SignUp(db *sql.DB) echo.HandlerFunc {
 		c.Bind(&request)
 		user.Username = request.Username
 		user.Password = request.Password
+
+		disableSignUp := viper.GetBool("disableSignUp")
+
+		if disableSignUp {
+			return c.NoContent(http.StatusForbidden)
+		}
 
 		if !captcha.VerifyString(request.CaptchaId, request.Captcha) {
 			return c.NoContent(http.StatusBadRequest)

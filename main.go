@@ -119,7 +119,7 @@ func main() {
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	c := cron.New()
-	c.AddFunc("0 1 * * *", func() { // every day 1 am
+	c.AddFunc("0 0 1 * * ", func() { // every day 1 am
 		schedulers.LogArticleHistory(db)
 	})
 	c.Start()

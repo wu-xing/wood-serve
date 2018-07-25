@@ -33,6 +33,7 @@ func migrate(db *sql.DB) {
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         status TEXT,
+        is_encryption BOOL,
         created_at DATE,
         updated_at DATE
     );
@@ -111,6 +112,7 @@ func main() {
 	r.POST("/article", handlers.PostArticle(db))
 	r.DELETE("/article/:id", handlers.DeleteArticle(db))
 	r.PUT("/article/:id", handlers.PutArticle(db))
+	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
 

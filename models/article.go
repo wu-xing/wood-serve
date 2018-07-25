@@ -10,12 +10,13 @@ import (
 
 // Task is a struct containing Task data
 type Article struct {
-	ID        string `json:"id"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
-	Status    string `json:"status"`
-	CreaterId string `json:"createrId"`
-	CreatedAt int64  `json:"createdAt"`
+	ID           string `json:"id"`
+	Title        string `json:"title"`
+	Content      string `json:"content"`
+	IsEncryption string `json:"isEncryption"`
+	Status       string `json:"status"`
+	CreaterId    string `json:"createrId"`
+	CreatedAt    int64  `json:"createdAt"`
 }
 
 // TaskCollection is collection of Tasks
@@ -23,8 +24,25 @@ type ArticleCollection struct {
 	Articles []Article `json:"items"`
 }
 
+func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
+	sql := "UPDATE articles set is_encryption = True where id = ?"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		panic(err)
+	}
+
+	defer stmt.Close()
+
+	result, err2 := stmt.Exec(articleId)
+
+	if err2 != nil {
+		panic(err2)
+	}
+	return result.LastInsertId()
+}
+
 func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
-	sql := "SELECT id, content, title, status, created_at FROM articles where creater_id = ?"
+	sql := "SELECT id, content, title, status, is_encryption, created_at FROM articles where creater_id = ?"
 	rows, err := db.Query(sql, userId)
 	defer rows.Close()
 
@@ -37,7 +55,7 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 	for rows.Next() {
 		article := Article{}
 		var createdAt time.Time
-		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &createdAt)
+		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &article.IsEncryption, &createdAt)
 		article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
 
 		if err2 != nil {

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	// "fmt"
 	// "time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -29,6 +28,17 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, "")
 		}
 		articles := models.GetArticlesFromDB(db, userId).Articles
+		for i := 0; i < len(articles); i++ {
+			if articles[i].IsEncryption == "1" {
+				articles[i].Content = ""
+			}
+		}
+		// for _, article := range articles {
+		// 	fmt.Println(article)
+		// 	if article.IsEncryption {
+		// 		article.Content = ""
+		// 	}
+		// }
 		return c.JSON(http.StatusOK, articles)
 	}
 }
@@ -62,7 +72,18 @@ func PutArticle(db *sql.DB) echo.HandlerFunc {
 		} else {
 			return err
 		}
+	}
+}
 
+func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		articleId := c.QueryParam("articleId")
+		_, err := models.LetArticleEncryption(db, articleId)
+		if err == nil {
+			return c.NoContent(http.StatusCreated)
+		} else {
+			return err
+		}
 	}
 }
 

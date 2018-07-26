@@ -10,13 +10,13 @@ import (
 
 // Task is a struct containing Task data
 type Article struct {
-	ID           string `json:"id"`
-	Title        string `json:"title"`
-	Content      string `json:"content"`
-	IsEncryption string `json:"isEncryption"`
-	Status       string `json:"status"`
-	CreaterId    string `json:"createrId"`
-	CreatedAt    int64  `json:"createdAt"`
+	ID           string       `json:"id"`
+	Title        string       `json:"title"`
+	Content      string       `json:"content"`
+	IsEncryption sql.NullBool `json:"isEncryption"`
+	Status       string       `json:"status"`
+	CreaterId    string       `json:"createrId"`
+	CreatedAt    int64        `json:"createdAt"`
 }
 
 // TaskCollection is collection of Tasks

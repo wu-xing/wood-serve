@@ -29,7 +29,7 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 		}
 		articles := models.GetArticlesFromDB(db, userId).Articles
 		for i := 0; i < len(articles); i++ {
-			if articles[i].IsEncryption == "1" {
+			if articles[i].IsEncryption.Valid {
 				articles[i].Content = ""
 			}
 		}

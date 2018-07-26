@@ -33,12 +33,6 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 				articles[i].Content = ""
 			}
 		}
-		// for _, article := range articles {
-		// 	fmt.Println(article)
-		// 	if article.IsEncryption {
-		// 		article.Content = ""
-		// 	}
-		// }
 		return c.JSON(http.StatusOK, articles)
 	}
 }

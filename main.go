@@ -122,7 +122,6 @@ func main() {
 
 	c := cron.New()
 	c.AddFunc("0 50 0 * * *", func() { // every day 1 am
-		fmt.Println("---     <。> - <。>       ---")
 		schedulers.LogArticleHistory(db)
 	})
 	c.Start()

@@ -17,6 +17,7 @@ type Article struct {
 	Status       string       `json:"status"`
 	CreaterId    string       `json:"createrId"`
 	CreatedAt    int64        `json:"createdAt"`
+	UpdateAt     int64        `json:"updatedAt"`
 }
 
 // TaskCollection is collection of Tasks
@@ -42,7 +43,7 @@ func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
 }
 
 func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
-	sql := "SELECT id, content, title, status, is_encryption, created_at FROM articles where creater_id = ?"
+	sql := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ?"
 	rows, err := db.Query(sql, userId)
 	defer rows.Close()
 
@@ -55,8 +56,10 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 	for rows.Next() {
 		article := Article{}
 		var createdAt time.Time
-		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &article.IsEncryption, &createdAt)
+		var updatedAt time.Time
+		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &article.IsEncryption, &createdAt, &updatedAt)
 		article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
+		article.UpdateAt = updatedAt.UnixNano() / int64(time.Millisecond)
 
 		if err2 != nil {
 			panic(err2)

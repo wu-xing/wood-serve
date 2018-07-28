@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	// "time"
+	"fmt"
 
 	"github.com/dgrijalva/jwt-go"
 	"wood-serve/models"
@@ -28,11 +29,11 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, "")
 		}
 		articles := models.GetArticlesFromDB(db, userId).Articles
-		for i := 0; i < len(articles); i++ {
-			if articles[i].IsEncryption.Valid {
-				articles[i].Content = ""
-			}
-		}
+		// for i := 0; i < len(articles); i++ {
+		// 	if articles[i].IsEncryption.Valid {
+		// 		articles[i].Content = ""
+		// 	}
+		// }
 		return c.JSON(http.StatusOK, articles)
 	}
 }
@@ -71,10 +72,11 @@ func PutArticle(db *sql.DB) echo.HandlerFunc {
 
 func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		articleId := c.QueryParam("articleId")
+		articleId := c.Param("articleId")
+		fmt.Println(articleId)
 		_, err := models.LetArticleEncryption(db, articleId)
 		if err == nil {
-			return c.NoContent(http.StatusCreated)
+			return c.NoContent(http.StatusOK)
 		} else {
 			return err
 		}

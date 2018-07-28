@@ -10,14 +10,14 @@ import (
 
 // Task is a struct containing Task data
 type Article struct {
-	ID           string       `json:"id"`
-	Title        string       `json:"title"`
-	Content      string       `json:"content"`
-	IsEncryption sql.NullBool `json:"isEncryption"`
-	Status       string       `json:"status"`
-	CreaterId    string       `json:"createrId"`
-	CreatedAt    int64        `json:"createdAt"`
-	UpdateAt     int64        `json:"updatedAt"`
+	ID           string `json:"id"`
+	Title        string `json:"title"`
+	Content      string `json:"content"`
+	IsEncryption bool   `json:"isEncryption"`
+	Status       string `json:"status"`
+	CreaterId    string `json:"createrId"`
+	CreatedAt    int64  `json:"createdAt"`
+	UpdateAt     int64  `json:"updatedAt"`
 }
 
 // TaskCollection is collection of Tasks
@@ -26,7 +26,7 @@ type ArticleCollection struct {
 }
 
 func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
-	sql := "UPDATE articles set is_encryption = True where id = ?"
+	sql := "UPDATE articles set is_encryption = 1 where id = ?"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		panic(err)
@@ -43,8 +43,8 @@ func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
 }
 
 func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
-	sql := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ?"
-	rows, err := db.Query(sql, userId)
+	sqlstr := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ?"
+	rows, err := db.Query(sqlstr, userId)
 	defer rows.Close()
 
 	if err != nil {
@@ -57,9 +57,11 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 		article := Article{}
 		var createdAt time.Time
 		var updatedAt time.Time
-		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &article.IsEncryption, &createdAt, &updatedAt)
+		var isEncryption sql.NullBool
+		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &isEncryption, &createdAt, &updatedAt)
 		article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
 		article.UpdateAt = updatedAt.UnixNano() / int64(time.Millisecond)
+		article.IsEncryption = isEncryption.Bool
 
 		if err2 != nil {
 			panic(err2)

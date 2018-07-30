@@ -131,7 +131,7 @@ func main() {
 	c.Start()
 
 	t := time.Now()
-	fmt.Println("Wood 服务启动")
+	fmt.Println("🔥 Wood 服务启动🔥")
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
 	e.Logger.Fatal(e.Start("0.0.0.0:8020"))

@@ -14,6 +14,7 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/dimiro1/banner"
 	"github.com/mattn/go-colorable"
+	"time"
 
 	"bytes"
 	_ "github.com/labstack/gommon/log"
@@ -122,9 +123,16 @@ func main() {
 
 	c := cron.New()
 	c.AddFunc("0 50 0 * * *", func() { // every day 1 am
+		t := time.Now()
+		fmt.Println("开始执行历史文章归档定时任务")
+		fmt.Println(t.Format("2006-01-02 15:04:05"))
 		schedulers.LogArticleHistory(db)
 	})
 	c.Start()
+
+	t := time.Now()
+	fmt.Println("Wood 服务启动")
+	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
 	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
 }

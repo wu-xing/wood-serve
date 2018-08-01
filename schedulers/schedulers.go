@@ -27,6 +27,9 @@ func LogArticleHistory(db *sql.DB) {
 	tEnd := tZero.UnixNano() / int64(time.Millisecond)
 	tBegin := tEnd - 1000*60*60*24
 
+	fmt.Println("tEnd", tEnd)
+	fmt.Println("tBegin", tBegin)
+
 	sql := "SELECT id, content FROM articles where updated_at > ? and updated_at < ?"
 	rows, err := db.Query(sql, tBegin, tEnd)
 

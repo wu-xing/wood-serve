@@ -55,6 +55,7 @@ func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 
 	for rows.Next() {
 		article := Article{}
+		// TODO 判断空条件
 		var createdAt time.Time
 		var updatedAt time.Time
 		var isEncryption sql.NullBool

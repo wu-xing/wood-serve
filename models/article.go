@@ -94,7 +94,19 @@ func GetArticle(db *sql.DB, articleId string) Article {
 	return article
 }
 
-func GetArticleHistoryDay(db *sql.DB, articleId string) []string {
+func GetArticleHistory(db *sql.DB, articleId string, date string) Article {
+	sql := "select articles_history.* from articles, articles_history where articles.id = articles_history.article_id and articles.id = ? and articles_history.date = ?"
+	row := db.QueryRow(sql, articleId, date)
+
+	var article Article
+	err := row.Scan(&article.ID, &article.Content, &article.Status, &article.CreaterId, &article.CreatedAt)
+	if err != nil {
+		panic(err)
+	}
+	return article
+}
+
+func GetArticleHistoryDays(db *sql.DB, articleId string) []string {
 	sql := "SELECT date FROM articles_history WHERE article_id = ?"
 	rows, err := db.Query(sql, articleId)
 	defer rows.Close()

@@ -122,7 +122,7 @@ func main() {
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	c := cron.New()
-	c.AddFunc("0 50 0 * * *", func() { // every day 1 am
+	c.AddFunc("0 50 0 * * *", func() { // every day 1 am 50
 		t := time.Now()
 		fmt.Println("开始执行历史文章归档定时任务")
 		fmt.Println(t.Format("2006-01-02 15:04:05"))

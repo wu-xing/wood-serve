@@ -95,6 +95,7 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
 	e.Static("/upload", "upload")
 
 	e.GET("/hello", func(c echo.Context) error {

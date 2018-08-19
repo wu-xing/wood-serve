@@ -116,6 +116,7 @@ func main() {
 	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
+	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))
 
 	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
 

@@ -20,6 +20,12 @@ type Article struct {
 	UpdateAt     int64  `json:"updatedAt"`
 }
 
+type ArticleHistory struct {
+	ArticleId string `json:"articleId"`
+	Content   string `json:"content"`
+	Date      string `json:"date"`
+}
+
 // TaskCollection is collection of Tasks
 type ArticleCollection struct {
 	Articles []Article `json:"items"`
@@ -78,7 +84,6 @@ func CheckArticleBelong(db *sql.DB, articleId string, userId string) bool {
 
 	var id string
 	err := row.Scan(&id)
-	fmt.Println(err)
 	return err == nil
 }
 
@@ -94,16 +99,16 @@ func GetArticle(db *sql.DB, articleId string) Article {
 	return article
 }
 
-func GetArticleHistory(db *sql.DB, articleId string, date string) Article {
-	sql := "select articles_history.* from articles, articles_history where articles.id = articles_history.article_id and articles.id = ? and articles_history.date = ?"
+func GetArticleHistoryByDate(db *sql.DB, articleId string, date string) ArticleHistory {
+	sql := "select articles_history.article_id, articles_history.content, articles_history.date from articles, articles_history where articles.id = articles_history.article_id and articles.id = ? and articles_history.date = ?"
 	row := db.QueryRow(sql, articleId, date)
 
-	var article Article
-	err := row.Scan(&article.ID, &article.Content, &article.Status, &article.CreaterId, &article.CreatedAt)
+	var articleHistory ArticleHistory
+	err := row.Scan(&articleHistory.ArticleId, &articleHistory.Content, &articleHistory.Date)
 	if err != nil {
 		panic(err)
 	}
-	return article
+	return articleHistory
 }
 
 func GetArticleHistoryDays(db *sql.DB, articleId string) []string {

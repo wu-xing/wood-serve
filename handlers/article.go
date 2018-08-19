@@ -38,25 +38,21 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func GetHistoryArticle(db *sql.DB) echo.HandlerFunc {
+func GetHistoryArticleByDate(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		date := c.QueryParam("date")
+		date := c.Param("date")
 		articleId := c.Param("articleId")
 
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
-		// jwtUserId := claims["id"].(string)
+		jwtUserId := claims["id"].(string)
 
-		// if userId != jwtUserId {
-		// 	return c.JSON(http.StatusUnauthorized, "")
-		// }
+		isBelong := models.CheckArticleBelong(db, articleId, jwtUserId)
+		if !isBelong {
+			return c.NoContent(http.StatusUnauthorized)
+		}
 
-		article := models.GetArticleHistory(db, articleId, date)
-		// for i := 0; i < len(articles); i++ {
-		// 	if articles[i].IsEncryption.Valid {
-		// 		articles[i].Content = ""
-		// 	}
-		// }
+		article := models.GetArticleHistoryByDate(db, articleId, date)
 		return c.JSON(http.StatusOK, article)
 
 	}

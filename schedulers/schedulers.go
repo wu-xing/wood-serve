@@ -18,13 +18,15 @@ type ArticleCollection struct {
 }
 
 func LogArticleHistory(db *sql.DB) {
+	// TODO yestoday 多减了一天
+	// FIXME
 	t := time.Now()
 	subDay, _ := time.ParseDuration("-24h")
 	yestoday := t.Add(subDay)
 	local, _ := time.LoadLocation("Asia/Shanghai")
 	tString := yestoday.Format("2006-01-02")
 	tZero, _ := time.ParseInLocation("2006-01-02", tString, local)
-	tEnd := tZero.UnixNano() / int64(time.Millisecond)
+	tEnd := tZero.UnixNano()/int64(time.Millisecond) + 1000*60*60*24
 	tBegin := tEnd - 1000*60*60*24
 
 	fmt.Println("tEnd", tEnd)

@@ -35,6 +35,7 @@ func migrate(db *sql.DB) {
         content TEXT NOT NULL,
         status TEXT,
         is_encryption BOOL,
+        is_public BOOL,
         created_at DATE,
         updated_at DATE
     );
@@ -106,6 +107,8 @@ func main() {
 
 	e.GET("/captcha/*", echo.WrapHandler(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
 	e.POST("/captcha", handlers.GenCaptcha(db))
+
+	e.GET("/share/article/:id", handlers.GetShareArticle(db))
 
 	r := e.Group("/auth")
 	r.Use(middleware.JWT([]byte("secret")))

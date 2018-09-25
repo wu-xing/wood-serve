@@ -38,6 +38,28 @@ func GetArticles(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
+func GetShareArticle(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		articleId := c.Param("id")
+
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		jwtUserId := claims["id"].(string)
+
+		article := models.GetArticle(db, articleId)
+
+		if !article.IsPublic {
+			return c.NoContent(http.StatusUnauthorized)
+		}
+
+		if article.CreaterId != jwtUserId {
+			return c.NoContent(http.StatusUnauthorized)
+		}
+
+		return c.JSON(http.StatusOK, article)
+	}
+}
+
 func GetHistoryArticleByDate(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		date := c.Param("date")

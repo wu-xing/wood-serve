@@ -42,17 +42,10 @@ func GetShareArticle(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		articleId := c.Param("id")
 
-		user := c.Get("user").(*jwt.Token)
-		claims := user.Claims.(jwt.MapClaims)
-		jwtUserId := claims["id"].(string)
-
 		article := models.GetArticle(db, articleId)
+		fmt.Println(article.IsPublic)
 
-		if !article.IsPublic {
-			return c.NoContent(http.StatusUnauthorized)
-		}
-
-		if article.CreaterId != jwtUserId {
+		if !article.IsPublic || article.IsEncryption {
 			return c.NoContent(http.StatusUnauthorized)
 		}
 

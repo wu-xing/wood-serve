@@ -88,11 +88,21 @@ func CheckArticleBelong(db *sql.DB, articleId string, userId string) bool {
 }
 
 func GetArticle(db *sql.DB, articleId string) Article {
-	sql := "SELECT id, content, status, creater_id, created_at FROM articles where id = ?"
-	row := db.QueryRow(sql, articleId)
+	sqlstr := "SELECT id, content, status, creater_id, created_at, updated_at, is_public, is_encryption FROM articles where id = ?"
+	row := db.QueryRow(sqlstr, articleId)
 
 	var article Article
-	err := row.Scan(&article.ID, &article.Content, &article.Status, &article.CreaterId, &article.CreatedAt)
+	var createdAt time.Time
+	var updatedAt time.Time
+	var isPublic sql.NullBool
+	var isEncryption sql.NullBool
+
+	err := row.Scan(&article.ID, &article.Content, &article.Status, &article.CreaterId, &createdAt, &updatedAt, &isPublic, &isEncryption)
+	article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
+	article.UpdateAt = updatedAt.UnixNano() / int64(time.Millisecond)
+	article.IsPublic = isPublic.Bool
+	article.IsEncryption = isEncryption.Bool
+
 	if err != nil {
 		panic(err)
 	}

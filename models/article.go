@@ -48,6 +48,23 @@ func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
 	return result.LastInsertId()
 }
 
+func LetArticleShare(db *sql.DB, articleId string) (int64, error) {
+	sql := "UPDATE articles set is_public = 1 where id = ?"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		panic(err)
+	}
+
+	defer stmt.Close()
+
+	result, err2 := stmt.Exec(articleId)
+
+	if err2 != nil {
+		panic(err2)
+	}
+	return result.LastInsertId()
+}
+
 func GetArticlesFromDB(db *sql.DB, userId string) ArticleCollection {
 	sqlstr := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ?"
 	rows, err := db.Query(sqlstr, userId)

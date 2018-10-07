@@ -108,7 +108,6 @@ func PutArticle(db *sql.DB) echo.HandlerFunc {
 func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		articleId := c.Param("articleId")
-		fmt.Println(articleId)
 		_, err := models.LetArticleEncryption(db, articleId)
 		if err == nil {
 			return c.NoContent(http.StatusOK)
@@ -118,7 +117,18 @@ func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-// PutTask endpoint
+func LetArticleShare(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		articleId := c.Param("articleId")
+		_, err := models.LetArticleShare(db, articleId)
+		if err == nil {
+			return c.NoContent(http.StatusOK)
+		} else {
+			return err
+		}
+	}
+}
+
 func PostArticle(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
@@ -144,7 +154,6 @@ func PostArticle(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-// DeleteTask endpoint
 func DeleteArticle(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)

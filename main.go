@@ -118,6 +118,7 @@ func main() {
 	r.DELETE("/article/:id", handlers.DeleteArticle(db))
 	r.PUT("/article/:id", handlers.PutArticle(db))
 	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
+	r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
 	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))

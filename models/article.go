@@ -48,6 +48,36 @@ func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
 	return result.LastInsertId()
 }
 
+func SearchArticle(db *sql.DB, userId string, searchStr string) ArticleCollection {
+	sqlstr := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ? and content like '%?%'"
+	rows, err := db.Query(sqlstr, userId, searchStr)
+	defer rows.Close()
+
+	if err != nil {
+		panic(err)
+	}
+
+	articleCollection := ArticleCollection{Articles: make([]Article, 0)}
+
+	for rows.Next() {
+		article := Article{}
+		// TODO 判断空条件
+		var createdAt time.Time
+		var updatedAt time.Time
+		var isEncryption sql.NullBool
+		err2 := rows.Scan(&article.ID, &article.Content, &article.Title, &article.Status, &isEncryption, &createdAt, &updatedAt)
+		article.CreatedAt = createdAt.UnixNano() / int64(time.Millisecond)
+		article.UpdateAt = updatedAt.UnixNano() / int64(time.Millisecond)
+		article.IsEncryption = isEncryption.Bool
+
+		if err2 != nil {
+			panic(err2)
+		}
+		articleCollection.Articles = append(articleCollection.Articles, article)
+	}
+	return articleCollection
+}
+
 func LetArticleShare(db *sql.DB, articleId string) (int64, error) {
 	sql := "UPDATE articles set is_public = 1 where id = ?"
 	stmt, err := db.Prepare(sql)

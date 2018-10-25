@@ -117,6 +117,24 @@ func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
+func SearchArticleByMatch(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["id"].(string)
+
+		searchStr := c.Param("search")
+		_, err := models.SearchArticle(db, userId, searchStr)
+		articles := models.GetArticlesFromDB(db, userId).Articles
+		// for i := 0; i < len(articles); i++ {
+		// 	if articles[i].IsEncryption.Valid {
+		// 		articles[i].Content = ""
+		// 	}
+		// }
+		return c.JSON(http.StatusOK, articles)
+	}
+}
+
 func LetArticleShare(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		articleId := c.Param("articleId")

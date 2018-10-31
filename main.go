@@ -40,6 +40,13 @@ func migrate(db *sql.DB) {
         updated_at DATE
     );
 
+    CREATE TABLE article_box (
+        id CHAR(36) PRIMARY KEY,
+        name VARCHAR(200),
+        created_at DATE,
+        updated_at DATE
+    );
+
     CREATE TABLE IF NOT EXISTS articles_history (
         article_id INTEGER NOT NULL,
         date CHAR(20) NOT NULL,

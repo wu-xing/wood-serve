@@ -132,6 +132,7 @@ func main() {
 	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))
 
 	r.POST("/article-box", handlers.PostArticleBox(db))
+	r.GET("/article-box", handlers.GetArticleBoxs(db))
 
 	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
 

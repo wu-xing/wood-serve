@@ -26,7 +26,6 @@ type ArticleHistory struct {
 	Date      string `json:"date"`
 }
 
-// TaskCollection is collection of Tasks
 type ArticleCollection struct {
 	Articles []Article `json:"items"`
 }

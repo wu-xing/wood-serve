@@ -29,3 +29,15 @@ func PostArticleBox(db *sql.DB) echo.HandlerFunc {
 		})
 	}
 }
+
+func GetArticleBoxs(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["id"].(string)
+
+		articleBoxs := models.GetArticleBoxs(db, userId).ArticleBoxs
+
+		return c.JSON(http.StatusOK, articleBoxs)
+	}
+}

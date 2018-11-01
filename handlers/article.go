@@ -124,8 +124,7 @@ func SearchArticleByMatch(db *sql.DB) echo.HandlerFunc {
 		userId := claims["id"].(string)
 
 		searchStr := c.Param("search")
-		_, err := models.SearchArticle(db, userId, searchStr)
-		articles := models.GetArticlesFromDB(db, userId).Articles
+		articles := models.SearchArticle(db, userId, searchStr)
 		// for i := 0; i < len(articles); i++ {
 		// 	if articles[i].IsEncryption.Valid {
 		// 		articles[i].Content = ""

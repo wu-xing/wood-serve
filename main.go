@@ -40,8 +40,9 @@ func migrate(db *sql.DB) {
         updated_at DATE
     );
 
-    CREATE TABLE IF_NOT EXISTS article_box (
+    CREATE TABLE IF NOT EXISTS article_box (
         id CHAR(36) PRIMARY KEY,
+        creater_id INTEGER NOT NULL,
         name VARCHAR(200),
         created_at DATE,
         updated_at DATE
@@ -89,7 +90,7 @@ func readConfg() {
 func main() {
 	isEnabled := true
 	isColorEnabled := true
-	banner.Init(colorable.NewColorableStdout(), isEnabled, isColorEnabled, bytes.NewBufferString(" ▄▀▀▄    ▄▀▀▄  ▄▀▀▀▀▄   ▄▀▀▀▀▄   ▄▀▀█▄▄\n█   █    ▐  █ █      █ █      █ █ ▄▀   █ \n▐  █        █ █      █ █      █ ▐ █    █\n█   ▄    █  ▀▄    ▄▀ ▀▄    ▄▀   █    █\n▀▄▀ ▀▄ ▄▀    ▀▀▀▀     ▀▀▀▀    ▄▀▄▄▄▄▀ \n▀                      █     ▐  \n▐"))
+	banner.Init(colorable.NewColorableStdout(), isEnabled, isColorEnabled, bytes.NewBufferString("\n\n██╗    ██╗ ██████╗  ██████╗ ██████╗ \n██║    ██║██╔═══██╗██╔═══██╗██╔══██╗\n██║ █╗ ██║██║   ██║██║   ██║██║  ██║\n██║███╗██║██║   ██║██║   ██║██║  ██║\n╚███╔███╔╝╚██████╔╝╚██████╔╝██████╔╝\n ╚══╝╚══╝  ╚═════╝  ╚═════╝ ╚═════╝ \n\n\n"))
 	fmt.Println("")
 
 	readConfg()
@@ -130,6 +131,8 @@ func main() {
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
 	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))
 
+	r.POST("/article-box", handlers.PostArticleBox(db))
+
 	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
 
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
@@ -145,7 +148,7 @@ func main() {
 	c.Start()
 
 	t := time.Now()
-	fmt.Println("🔥 Wood 服务启动🔥")
+	fmt.Println("🔥  WOOD 服务启动🔥")
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
 	e.Logger.Fatal(e.Start("0.0.0.0:8020"))

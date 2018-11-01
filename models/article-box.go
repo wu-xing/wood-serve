@@ -17,8 +17,8 @@ type ArticleBox struct {
 }
 
 // PutTask into DB
-func CreateArticleBox(db *sql.DB, name string) (int64, error) {
-	sql := "INSERT INTO article_box(id, name, created_at, updated_at) VALUES(?, ?, ?, ?)"
+func CreateArticleBox(db *sql.DB, userId string, name string) uuid.UUID {
+	sql := "INSERT INTO article_box(id, name, creater_id, created_at, updated_at) VALUES(?, ?, ?, ?, ?)"
 
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
@@ -30,12 +30,12 @@ func CreateArticleBox(db *sql.DB, name string) (int64, error) {
 	defer stmt.Close()
 
 	uuid := uuid.Must(uuid.NewV4())
-	result, err2 := stmt.Exec(uuid, name, time.Now().UnixNano()/int64(time.Millisecond), time.Now().UnixNano()/int64(time.Millisecond))
+	_, err2 := stmt.Exec(uuid, name, userId, time.Now().UnixNano()/int64(time.Millisecond), time.Now().UnixNano()/int64(time.Millisecond))
 
 	// Exit if we get an error
 	if err2 != nil {
 		panic(err2)
 	}
 
-	return result.LastInsertId()
+	return uuid
 }

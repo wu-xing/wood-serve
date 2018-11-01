@@ -45,7 +45,7 @@ func CreateArticleBox(db *sql.DB, userId string, name string) uuid.UUID {
 }
 
 func GetArticleBoxs(db *sql.DB, userId string) ArticleBoxCollection {
-	sqlstr := "SELECT id, name created_at, updated_at FROM article_box where creater_id = ?"
+	sqlstr := "SELECT id, name, created_at, updated_at FROM article_box where creater_id = ?"
 	rows, err := db.Query(sqlstr, userId)
 	defer rows.Close()
 

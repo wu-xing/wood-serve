@@ -127,6 +127,7 @@ func main() {
 	r.PUT("/article/:id", handlers.PutArticle(db))
 	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
 	r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
+	r.GET("/articles/search/:search", handlers.SearchArticleByMatch(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
 	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))

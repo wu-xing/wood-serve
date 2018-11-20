@@ -48,7 +48,7 @@ func LetArticleEncryption(db *sql.DB, articleId string) (int64, error) {
 }
 
 func SearchArticle(db *sql.DB, userId string, searchStr string) ArticleCollection {
-	sqlstr := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ? and content like '%?%'"
+	sqlstr := "SELECT id, content, title, status, is_encryption, created_at, updated_at FROM articles where creater_id = ? and content like '%' || ? || '%'"
 	rows, err := db.Query(sqlstr, userId, searchStr)
 	defer rows.Close()
 

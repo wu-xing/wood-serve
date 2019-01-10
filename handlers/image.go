@@ -68,7 +68,7 @@ func PostAvatarByBase64(db *sql.DB) echo.HandlerFunc {
 
 		c.Bind(&request)
 
-		imagedir := viper.GetString("imagedir")
+		imagedir := viper.GetString("IMAGE_DIR")
 
 		fileNameHash := GetMD5Hash(request.Image)
 

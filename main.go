@@ -5,6 +5,7 @@ import (
 
 	"net/http"
 	"wood-serve/database"
+	"wood-serve/entitys"
 	"wood-serve/handlers"
 	"wood-serve/schedulers"
 
@@ -19,7 +20,6 @@ import (
 	"bytes"
 	_ "github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
-	// "os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -79,8 +79,9 @@ func migrate(db *sql.DB) {
 
 func readConfg() {
 	viper.SetConfigName("config") // name of config file (without extension)
-
-	viper.AddConfigPath(".")    // optionally look for config in the working directory
+	viper.AddConfigPath(".")      // optionally look for config in the working directory
+	viper.SetEnvPrefix("WOOD")
+	viper.AutomaticEnv()
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
@@ -97,6 +98,11 @@ func main() {
 
 	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
 	defer db.Close()
+
+	goDB := database.ConnectDatabase()
+	defer goDB.Close()
+
+	goDB.AutoMigrate(&entitys.Article{})
 
 	migrate(db)
 
@@ -150,7 +156,7 @@ func main() {
 	c.Start()
 
 	t := time.Now()
-	fmt.Println("🔥  WOOD 服务启动🔥")
+	fmt.Println("🔥  WOOD SERVER LUNCHED🔥")
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
 	e.Logger.Fatal(e.Start("0.0.0.0:8020"))

@@ -33,7 +33,7 @@ func SignUp(db *sql.DB) echo.HandlerFunc {
 		user.Username = request.Username
 		user.Password = request.Password
 
-		disableSignUp := viper.GetBool("disableSignUp")
+		disableSignUp := viper.GetBool("DISABLE_SIGN_UP")
 
 		if disableSignUp {
 			return c.NoContent(http.StatusForbidden)

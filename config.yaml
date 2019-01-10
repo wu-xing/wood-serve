@@ -1,2 +1,8 @@
-imagedir: "upload/"
-disableSignUp: true
+IMAGE_DIR: "upload/"
+DISABLE_SIGN_UP: true
+
+DB_HOST: "localhost"
+DB_PORT: "5432"
+DB_USER: "postgres"
+DB_NAME: "wood"
+DB_PASSWD: "mysecretpassword"

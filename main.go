@@ -102,7 +102,7 @@ func main() {
 	goDB := database.ConnectDatabase()
 	defer goDB.Close()
 
-	goDB.AutoMigrate(&entitys.Article{})
+	goDB.AutoMigrate(&entitys.Article{}, &entitys.User{})
 
 	migrate(db)
 

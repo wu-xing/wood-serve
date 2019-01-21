@@ -26,6 +26,20 @@ func InitDB(filepath string) *sql.DB {
 	return db
 }
 
+type DatabaseInstance struct {
+	Connection *gorm.DB
+}
+
+var dbInstance *DatabaseInstance
+
+func GetDatabaseInstance() *DatabaseInstance {
+	if dbInstance == nil {
+		dbInstance = new(DatabaseInstance)
+		dbInstance.Connection = ConnectDatabase()
+	}
+	return dbInstance
+}
+
 func ConnectDatabase() *gorm.DB {
 	dbHost := viper.GetString("DB_HOST")
 	dbPort := viper.GetString("DB_PORT")

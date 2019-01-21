@@ -118,6 +118,7 @@ func main() {
 	})
 	e.POST("/signin", handlers.SignIn(db))
 	e.POST("/signup", handlers.SignUp(db))
+	e.POST("/v2/signup", handlers.V2SignUp())
 
 	e.GET("/captcha/*", echo.WrapHandler(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
 	e.POST("/captcha", handlers.GenCaptcha(db))

@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
+	"wood-serve/domain"
 	"wood-serve/models"
 
 	"github.com/dchest/captcha"
@@ -16,9 +17,9 @@ import (
 	"github.com/labstack/echo"
 )
 
-func V2SignUp(db *sql.DB) echo.HandlerFunc {
+func V2SignUp() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		user := models.User{}
+		// user := models.User{}
 
 		request := new(struct {
 			Captcha   string `json:"captcha"`
@@ -28,8 +29,8 @@ func V2SignUp(db *sql.DB) echo.HandlerFunc {
 		})
 
 		c.Bind(&request)
-		user.Username = request.Username
-		user.Password = request.Password
+		// user.Username = request.Username
+		// user.Password = request.Password
 
 		disableSignUp := viper.GetBool("DISABLE_SIGN_UP")
 
@@ -40,18 +41,22 @@ func V2SignUp(db *sql.DB) echo.HandlerFunc {
 		if !captcha.VerifyString(request.CaptchaId, request.Captcha) {
 			return c.NoContent(http.StatusBadRequest)
 		} else {
-			_, error := models.CreateUser(db, &user)
-			if error == nil {
-				return c.NoContent(http.StatusNoContent)
-			} else {
-				return error
-			}
+			domain.CreateUser(request.Username, request.Password)
+			// _, error := models.CreateUser(db, &user)
+			return c.NoContent(http.StatusNoContent)
+
+			// if error == nil {
+			// 	return c.NoContent(http.StatusNoContent)
+
+			// } else {
+			// 	return error
+			// }
 		}
 
 	}
 }
 
-func V2SignInV2(db *sql.DB) echo.HandlerFunc {
+func V2SignIn(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		request := new(struct {

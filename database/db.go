@@ -50,6 +50,7 @@ func ConnectDatabase() *gorm.DB {
 	connectConfig := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUser, dbName, dbPasswd)
 
 	db, err := gorm.Open("postgres", connectConfig)
+	db.LogMode(true)
 	if err != nil {
 		panic(err)
 	}

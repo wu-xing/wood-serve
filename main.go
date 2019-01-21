@@ -117,6 +117,7 @@ func main() {
 		return c.String(http.StatusOK, "hello my firend")
 	})
 	e.POST("/signin", handlers.SignIn(db))
+	e.POST("/v2/signin", handlers.V2SignIn())
 	e.POST("/signup", handlers.SignUp(db))
 	e.POST("/v2/signup", handlers.V2SignUp())
 

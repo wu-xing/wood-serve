@@ -5,9 +5,12 @@ import (
 )
 
 type Article struct {
-	ID           string `gorm:"type:uuid; primary_key"`
-	Title        string `gorm:"size:550"`
-	Creator      User   `gorm:"not null"`
+	ID           string `gorm:"type:uuid; primary_key; default: uuid_generate_v4();"`
+	Title        string `gorm:"size:350"`
+	Creator      *User  `gorm:"not null"`
+	CreatorId    string `gorm:"type:varchar(100)"`
+	Box          *ArticleBox
+	BoxId        string `gorm:"type:varchar(100)"`
 	Content      string `gorm:"type:text"`
 	Type         string `gorm:"size:30;default:'DEFAULT'"`
 	Status       string `gorm:"size:30;default:'ACTIVE'"`

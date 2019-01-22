@@ -10,8 +10,6 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/spf13/viper"
 
-	"fmt"
-
 	"github.com/labstack/echo"
 )
 
@@ -91,7 +89,7 @@ func V2SignIn() echo.HandlerFunc {
 		}
 		return c.JSON(http.StatusOK, map[string]string{
 			"token": t,
-			"id":    user.ID,
+			"id":    user.ID.String(),
 		})
 	}
 }

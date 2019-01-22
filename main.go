@@ -100,9 +100,10 @@ func main() {
 	defer db.Close()
 
 	goDB := database.ConnectDatabase()
+	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	defer goDB.Close()
 
-	goDB.AutoMigrate(&entitys.Article{}, &entitys.User{})
+	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{})
 
 	migrate(db)
 
@@ -131,6 +132,7 @@ func main() {
 
 	r.GET("/articles", handlers.GetArticles(db))
 	r.POST("/article", handlers.PostArticle(db))
+	r.POST("/v2/article", handlers.V2PostArticle(db))
 	r.DELETE("/article/:id", handlers.DeleteArticle(db))
 	r.PUT("/article/:id", handlers.PutArticle(db))
 	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))

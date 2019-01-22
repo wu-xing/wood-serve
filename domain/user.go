@@ -11,8 +11,7 @@ func CheckUserExist(username string) bool {
 	db := database.GetDatabaseInstance()
 
 	user := new(entitys.User)
-	db.Connection.Where(&entitys.User{Username: username}).First(&user)
-	return user.ID != ""
+	return db.Connection.Where(&entitys.User{Username: username}).First(&user).Error == nil
 }
 
 func AuthUser(username string, password string) (*entitys.User, error) {

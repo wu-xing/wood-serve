@@ -77,7 +77,7 @@ func migrate(db *sql.DB) {
 	}
 }
 
-func readConfg() {
+func setupReadConfg() {
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.AddConfigPath(".")      // optionally look for config in the working directory
 	viper.SetEnvPrefix("WOOD")
@@ -89,12 +89,10 @@ func readConfg() {
 }
 
 func main() {
-	isEnabled := true
-	isColorEnabled := true
-	banner.Init(colorable.NewColorableStdout(), isEnabled, isColorEnabled, bytes.NewBufferString("\n\n██╗    ██╗ ██████╗  ██████╗ ██████╗ \n██║    ██║██╔═══██╗██╔═══██╗██╔══██╗\n██║ █╗ ██║██║   ██║██║   ██║██║  ██║\n██║███╗██║██║   ██║██║   ██║██║  ██║\n╚███╔███╔╝╚██████╔╝╚██████╔╝██████╔╝\n ╚══╝╚══╝  ╚═════╝  ╚═════╝ ╚═════╝ \n\n\n"))
+	banner.Init(colorable.NewColorableStdout(), true, true, bytes.NewBufferString("\n\n██╗    ██╗ ██████╗  ██████╗ ██████╗ \n██║    ██║██╔═══██╗██╔═══██╗██╔══██╗\n██║ █╗ ██║██║   ██║██║   ██║██║  ██║\n██║███╗██║██║   ██║██║   ██║██║  ██║\n╚███╔███╔╝╚██████╔╝╚██████╔╝██████╔╝\n ╚══╝╚══╝  ╚═════╝  ╚═════╝ ╚═════╝ \n\n\n"))
 	fmt.Println("")
 
-	readConfg()
+	setupReadConfg()
 
 	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
 	defer db.Close()
@@ -115,7 +113,7 @@ func main() {
 	e.Static("/upload", "upload")
 
 	e.GET("/hello", func(c echo.Context) error {
-		return c.String(http.StatusOK, "hello my firend")
+		return c.String(http.StatusOK, "hello my firends")
 	})
 	e.POST("/signin", handlers.SignIn(db))
 	e.POST("/v2/signin", handlers.V2SignIn())
@@ -131,6 +129,7 @@ func main() {
 	r.Use(middleware.JWT([]byte("secret")))
 
 	r.GET("/articles", handlers.GetArticles(db))
+	r.GET("/v2/articles", handlers.V2GetArticles(db))
 	r.POST("/article", handlers.PostArticle(db))
 	r.POST("/v2/article", handlers.V2PostArticle(db))
 	r.DELETE("/article/:id", handlers.DeleteArticle(db))

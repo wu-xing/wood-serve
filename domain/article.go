@@ -16,3 +16,12 @@ func CreateArticle(title string, content string, userId string) (*entitys.Articl
 	error := db.Connection.Create(&article).Error
 	return article, error
 }
+
+func GetArticlesByUser(userId string) []entitys.Article {
+
+	db := database.GetDatabaseInstance()
+
+	articles := []entitys.Article{}
+	db.Connection.Where("creator_id = ?", userId).Find(&articles)
+	return articles
+}

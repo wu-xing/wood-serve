@@ -228,25 +228,3 @@ func CreateArticle(db *sql.DB, article *Article) (int64, error) {
 
 	return result.LastInsertId()
 }
-
-// DeleteTask from DB
-func DeleteArticle(db *sql.DB, id int, userId string) (int64, error) {
-	sql := "DELETE FROM articles WHERE id = ? and creater_id = ?"
-
-	// Create a prepared SQL statement
-	stmt, err := db.Prepare(sql)
-	// Exit if we get an error
-	if err != nil {
-		panic(err)
-	}
-	defer stmt.Close()
-
-	// Replace the '?' in our prepared statement with 'id'
-	result, err2 := stmt.Exec(id, userId)
-	// Exit if we get an error
-	if err2 != nil {
-		panic(err2)
-	}
-
-	return result.RowsAffected()
-}

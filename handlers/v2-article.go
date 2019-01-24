@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"net/http"
-	"strconv"
 
 	// "time"
 	"fmt"
@@ -84,28 +83,20 @@ func V2GetArticleHistory(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func V2PutArticle(db *sql.DB) echo.HandlerFunc {
+func V2LetArticleEncryption() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		article := new(models.Article)
-		c.Bind(&article)
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["id"].(string)
 
-		_, err := models.UpdateArticle(db, article)
-		if err == nil {
+		articleId := c.Param("articleId")
+
+		error := domain.LetArticleEncryption(userId, articleId)
+
+		if error == nil {
 			return c.NoContent(http.StatusCreated)
 		} else {
-			return err
-		}
-	}
-}
-
-func V2LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		articleId := c.Param("articleId")
-		_, err := models.LetArticleEncryption(db, articleId)
-		if err == nil {
-			return c.NoContent(http.StatusOK)
-		} else {
-			return err
+			return error
 		}
 	}
 }
@@ -165,21 +156,27 @@ func V2PostArticle(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func V2DeleteArticle(db *sql.DB) echo.HandlerFunc {
+func V2UpdateArticle() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
 		userId := claims["id"].(string)
 
-		id, _ := strconv.Atoi(c.Param("id"))
-		// Use our new model to delete a task
-		_, err := models.DeleteArticle(db, id, userId)
-		// Return a JSON response on success
-		if err == nil {
-			return c.JSON(http.StatusOK, H{})
-			// Handle errors
+		request := new(struct {
+			ID      string `json:"id"`
+			Title   string `json:"title"`
+			Content string `json:"content"`
+		})
+
+		c.Bind(&request)
+
+		error := domain.UpdateArticle(userId, request.ID, request.Title, request.Content)
+
+		if error == nil {
+			return c.NoContent(http.StatusCreated)
 		} else {
-			return err
+			return error
 		}
+
 	}
 }

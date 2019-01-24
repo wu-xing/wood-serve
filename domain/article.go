@@ -25,6 +25,23 @@ func GetArticlesByUser(userId string) []entitys.Article {
 	return articles
 }
 
-func UpdateArticle(articleId string, title string, content string) {
-	// db := database.GetDatabaseInstance()
+func UpdateArticle(userId string, articleId string, title string, content string) error {
+	db := database.GetDatabaseInstance()
+
+	article := new(entitys.Article)
+
+	db.Connection.Where("creator_id = ? And id = ?", userId, articleId).First(&article)
+
+	article.Title = title
+	article.Content = content
+
+	return db.Connection.Save(&article).Error
+}
+
+func LetArticleEncryption(userId string, articleId string) error {
+	db := database.GetDatabaseInstance()
+
+	article := new(entitys.Article)
+
+	return db.Connection.Model(article).Where("creator_id = ? And id = ?", userId, articleId).Update("is_encryption", true).Error
 }

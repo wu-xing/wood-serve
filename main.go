@@ -115,9 +115,9 @@ func main() {
 	e.GET("/hello", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello my firends")
 	})
-	e.POST("/signin", handlers.SignIn(db))
+	// e.POST("/signin", handlers.SignIn(db))
 	e.POST("/v2/signin", handlers.V2SignIn())
-	e.POST("/signup", handlers.SignUp(db))
+	// e.POST("/signup", handlers.SignUp(db))
 	e.POST("/v2/signup", handlers.V2SignUp())
 
 	e.GET("/captcha/*", echo.WrapHandler(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
@@ -128,13 +128,14 @@ func main() {
 	r := e.Group("/auth")
 	r.Use(middleware.JWT([]byte("secret")))
 
-	r.GET("/articles", handlers.GetArticles(db))
+	// r.GET("/articles", handlers.GetArticles(db))
 	r.GET("/v2/articles", handlers.V2GetArticles(db))
-	r.POST("/article", handlers.PostArticle(db))
+	// r.POST("/article", handlers.PostArticle(db))
 	r.POST("/v2/article", handlers.V2PostArticle(db))
-	r.DELETE("/article/:id", handlers.DeleteArticle(db))
-	r.PUT("/article/:id", handlers.PutArticle(db))
-	r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
+	// r.PUT("/article/:id", handlers.PutArticle(db))
+	r.PUT("/v2/article/:id", handlers.V2UpdateArticle())
+	// r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
+	r.POST("/v2/article/encryption/:articleId", handlers.V2LetArticleEncryption())
 	r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
 	r.GET("/articles/search/:search", handlers.SearchArticleByMatch(db))
 

@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"net/http"
-	"strconv"
 
 	// "time"
 	"fmt"
@@ -91,19 +90,19 @@ func GetArticleHistory(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func PutArticle(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		article := new(models.Article)
-		c.Bind(&article)
+// func PutArticle(db *sql.DB) echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		article := new(models.Article)
+// 		c.Bind(&article)
 
-		_, err := models.UpdateArticle(db, article)
-		if err == nil {
-			return c.NoContent(http.StatusCreated)
-		} else {
-			return err
-		}
-	}
-}
+// 		_, err := models.UpdateArticle(db, article)
+// 		if err == nil {
+// 			return c.NoContent(http.StatusCreated)
+// 		} else {
+// 			return err
+// 		}
+// 	}
+// }
 
 func LetArticleEncryption(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -165,25 +164,6 @@ func PostArticle(db *sql.DB) echo.HandlerFunc {
 			return c.JSON(http.StatusCreated, H{
 				"id": id,
 			})
-		} else {
-			return err
-		}
-	}
-}
-
-func DeleteArticle(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user := c.Get("user").(*jwt.Token)
-		claims := user.Claims.(jwt.MapClaims)
-		userId := claims["id"].(string)
-
-		id, _ := strconv.Atoi(c.Param("id"))
-		// Use our new model to delete a task
-		_, err := models.DeleteArticle(db, id, userId)
-		// Return a JSON response on success
-		if err == nil {
-			return c.JSON(http.StatusOK, H{})
-			// Handle errors
 		} else {
 			return err
 		}

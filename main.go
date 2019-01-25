@@ -101,7 +101,7 @@ func main() {
 	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	defer goDB.Close()
 
-	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{})
+	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory)
 
 	migrate(db)
 
@@ -154,7 +154,7 @@ func main() {
 		t := time.Now()
 		fmt.Println("开始执行历史文章归档定时任务")
 		fmt.Println(t.Format("2006-01-02 15:04:05"))
-		schedulers.LogArticleHistory(db)
+		schedulers.LogArticleHistory()
 	})
 
 	c.Start()
@@ -163,5 +163,5 @@ func main() {
 	fmt.Println("🔥  WOOD SERVER LUNCHED🔥")
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
-	e.Logger.Fatal(e.Start("0.0.0.0:8020"))
+	e.Logger.Fatal(e.Start("0.0.0.0:" + "8020"))
 }

@@ -59,7 +59,7 @@ func AddImage(filename string, creatorId string) error {
 	image.CreatorId = creatorId
 	image.Filename = filename
 
-	return db.Connection.Create(image).Error
+	return db.Connection.Create(&image).Error
 }
 
 func SaveImage(image string, creatorId string) string {
@@ -67,12 +67,16 @@ func SaveImage(image string, creatorId string) string {
 
 	filenameHash := getMD5Hash(image)
 
-	filename, err := saveImageToDisk(imagedir+filenameHash, image)
+	filename, error := saveImageToDisk(imagedir+filenameHash, image)
 
-	AddImage(filename, creatorId)
+	if error != nil {
+		panic(error)
+	}
 
-	if err != nil {
-		panic(err)
+	error2 := AddImage(filename, creatorId)
+
+	if error2 != nil {
+		panic(error2)
 	}
 
 	return filename

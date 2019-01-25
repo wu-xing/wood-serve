@@ -98,7 +98,7 @@ func main() {
 	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	defer goDB.Close()
 
-	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{})
+	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{}, &entitys.Image{})
 
 	migrate(db)
 
@@ -142,7 +142,7 @@ func main() {
 	r.POST("/article-box", handlers.PostArticleBox(db))
 	r.GET("/article-box", handlers.GetArticleBoxs(db))
 
-	r.POST("/image/base64", handlers.PostAvatarByBase64(db))
+	r.POST("/image/base64", handlers.PostImageByBase64(db))
 
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 

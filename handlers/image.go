@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func PostAvatarByBase64(db *sql.DB) echo.HandlerFunc {
+func PostImageByBase64(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)

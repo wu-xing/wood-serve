@@ -8,16 +8,14 @@ import (
 	"wood-serve/entitys"
 	"wood-serve/handlers"
 	"wood-serve/schedulers"
+	"wood-serve/util"
 
 	"github.com/robfig/cron"
 
 	"fmt"
 	"github.com/dchest/captcha"
-	"github.com/dimiro1/banner"
-	"github.com/mattn/go-colorable"
 	"time"
 
-	"bytes"
 	_ "github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
 
@@ -89,8 +87,7 @@ func setupReadConfg() {
 }
 
 func main() {
-	banner.Init(colorable.NewColorableStdout(), true, true, bytes.NewBufferString("\n\n██╗    ██╗ ██████╗  ██████╗ ██████╗ \n██║    ██║██╔═══██╗██╔═══██╗██╔══██╗\n██║ █╗ ██║██║   ██║██║   ██║██║  ██║\n██║███╗██║██║   ██║██║   ██║██║  ██║\n╚███╔███╔╝╚██████╔╝╚██████╔╝██████╔╝\n ╚══╝╚══╝  ╚═════╝  ╚═════╝ ╚═════╝ \n\n\n"))
-	fmt.Println("")
+	util.LogBanner()
 
 	setupReadConfg()
 

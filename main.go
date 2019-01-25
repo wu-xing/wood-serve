@@ -101,7 +101,7 @@ func main() {
 	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	defer goDB.Close()
 
-	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory)
+	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{})
 
 	migrate(db)
 

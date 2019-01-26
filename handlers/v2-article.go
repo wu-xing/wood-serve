@@ -109,19 +109,19 @@ func V2SearchArticleByMatch(db *sql.DB) echo.HandlerFunc {
 
 		searchStr := c.Param("search")
 		articles := models.SearchArticle(db, userId, searchStr)
-		// for i := 0; i < len(articles); i++ {
-		// 	if articles[i].IsEncryption.Valid {
-		// 		articles[i].Content = ""
-		// 	}
-		// }
 		return c.JSON(http.StatusOK, articles)
 	}
 }
 
-func V2LetArticleShare(db *sql.DB) echo.HandlerFunc {
+func V2LetArticleShare() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["id"].(string)
+
 		articleId := c.Param("articleId")
-		_, err := models.LetArticleShare(db, articleId)
+
+		err := domain.LetArticleShare(userId, articleId)
 		if err == nil {
 			return c.NoContent(http.StatusOK)
 		} else {

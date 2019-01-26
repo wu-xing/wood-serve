@@ -112,9 +112,7 @@ func main() {
 	e.GET("/hello", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello my firends")
 	})
-	// e.POST("/signin", handlers.SignIn(db))
 	e.POST("/v2/signin", handlers.V2SignIn())
-	// e.POST("/signup", handlers.SignUp(db))
 	e.POST("/v2/signup", handlers.V2SignUp())
 
 	e.GET("/captcha/*", echo.WrapHandler(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
@@ -134,19 +132,21 @@ func main() {
 	// r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
 	r.POST("/v2/article/encryption/:articleId", handlers.V2LetArticleEncryption())
 	r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
+	r.POST("/v2/article/share/:articleId", handlers.V2LetArticleShare())
 	r.GET("/articles/search/:search", handlers.SearchArticleByMatch(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))
 	r.GET("/article/:articleId/history/:date", handlers.GetHistoryArticleByDate(db))
 
 	r.POST("/article-box", handlers.PostArticleBox(db))
-	r.GET("/article-box", handlers.GetArticleBoxs(db))
+	r.GET("/article-boxs", handlers.GetArticleBoxs(db))
 
 	r.POST("/image/base64", handlers.PostImageByBase64(db))
 
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	c := cron.New()
+
 	c.AddFunc("0 50 0 * * *", func() { // every day 1 am 50
 		t := time.Now()
 		fmt.Println("开始执行历史文章归档定时任务")

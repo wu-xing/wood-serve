@@ -36,12 +36,20 @@ func GetAllArticleModifyTody() ([]entitys.Article, error) {
 	local, _ := time.LoadLocation("Asia/Shanghai")
 	yestodayZeroTime := yestoday.Format("2006-01-02")
 
-	compareBegin, _ := time.ParseInLocation("2006-01-02", tString, local)
-	compareEnd := tZero.Add(addADay)
+	compareBegin, _ := time.ParseInLocation("2006-01-02", yestodayZeroTime, local)
+	compareEnd := compareBegin.Add(addADay)
 
 	articles := []entitys.Article{}
 	error := db.Connection.Where("updated_at < ? ::date AND updated_at > ? ::date", compareEnd, compareBegin).Find(&articles).Error
 	return articles, error
+}
+
+func LetArticleShare(userId string, articleId string) error {
+	db := database.GetDatabaseInstance()
+
+	article := new(entitys.Article)
+
+	return db.Connection.Model(article).Where("creator_id = ? And id = ?", userId, articleId).Update("is_public", true).Error
 }
 
 func UpdateArticle(userId string, articleId string, title string, content string) error {

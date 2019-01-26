@@ -30,16 +30,17 @@ func GetAllArticleModifyTody() ([]entitys.Article, error) {
 	db := database.GetDatabaseInstance()
 
 	t := time.Now()
-	subDay, _ := time.ParseDuration("-24h")
-	yestoday := t.Add(subDay)
+	subADay, _ := time.ParseDuration("-24h")
+	addADay, _ := time.ParseDuration("+24h")
+	yestoday := t.Add(subADay)
 	local, _ := time.LoadLocation("Asia/Shanghai")
-	tString := yestoday.Format("2006-01-02")
-	tZero, _ := time.ParseInLocation("2006-01-02", tString, local)
-	tBegin := tZero.UnixNano() / int64(time.Millisecond)
-	tEnd := tBegin + 1000*60*60*24
+	yestodayZeroTime := yestoday.Format("2006-01-02")
+
+	compareBegin, _ := time.ParseInLocation("2006-01-02", tString, local)
+	compareEnd := tZero.Add(addADay)
 
 	articles := []entitys.Article{}
-	error := db.Connection.Where("updated_at = < ? AND updated_at > ?", tEnd, tBegin).Find(&articles).Error
+	error := db.Connection.Where("updated_at < ? ::date AND updated_at > ? ::date", compareEnd, compareBegin).Find(&articles).Error
 	return articles, error
 }
 

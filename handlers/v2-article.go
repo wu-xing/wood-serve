@@ -6,10 +6,11 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"wood-serve/domain"
-	"wood-serve/models"
 
 	"github.com/labstack/echo"
 )
+
+type H map[string]interface{}
 
 func V2GetArticles(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -20,7 +21,7 @@ func V2GetArticles(db *sql.DB) echo.HandlerFunc {
 		jwtUserId := claims["id"].(string)
 
 		if userId != jwtUserId {
-			return c.JSON(http.StatusUnauthorized, "")
+			return c.NoContent(http.StatusUnauthorized)
 		}
 		articles := domain.GetArticlesByUser(userId)
 		return c.JSON(http.StatusOK, articles)
@@ -45,40 +46,43 @@ func V2GetShareArticle() echo.HandlerFunc {
 	}
 }
 
-func V2GetHistoryArticleByDate(db *sql.DB) echo.HandlerFunc {
+func V2GetHistoryArticleByDate() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		date := c.Param("date")
 		articleId := c.Param("articleId")
 
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
-		jwtUserId := claims["id"].(string)
+		userId := claims["id"].(string)
 
-		isBelong := models.CheckArticleBelong(db, articleId, jwtUserId)
+		isBelong := domain.CheckArticleBelongUser(userId, articleId)
+
 		if !isBelong {
 			return c.NoContent(http.StatusUnauthorized)
 		}
 
-		article := models.GetArticleHistoryByDate(db, articleId, date)
+		article := domain.GetArticleHistory(articleId, date)
 		return c.JSON(http.StatusOK, article)
 
 	}
 }
 
-func V2GetArticleHistory(db *sql.DB) echo.HandlerFunc {
+func V2GetArticleHistory() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
-		jwtUserId := claims["id"].(string)
+		userId := claims["id"].(string)
 
 		articleId := c.Param("articleId")
-		isBelong := models.CheckArticleBelong(db, articleId, jwtUserId)
-		if !isBelong {
+
+		_, error := domain.GetArticleByIdAndUserId(userId, articleId)
+
+		if error != nil {
 			return c.NoContent(http.StatusUnauthorized)
 		}
 
-		days := models.GetArticleHistoryDays(db, articleId)
+		days := domain.GetArticeHistoryDatesById(articleId)
 		return c.JSON(http.StatusOK, days)
 	}
 }
@@ -101,14 +105,14 @@ func V2LetArticleEncryption() echo.HandlerFunc {
 	}
 }
 
-func V2SearchArticleByMatch(db *sql.DB) echo.HandlerFunc {
+func V2SearchArticleByMatch() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
 		userId := claims["id"].(string)
 
 		searchStr := c.Param("search")
-		articles := models.SearchArticle(db, userId, searchStr)
+		articles := domain.SearchArticleByUserId(userId, searchStr)
 		return c.JSON(http.StatusOK, articles)
 	}
 }

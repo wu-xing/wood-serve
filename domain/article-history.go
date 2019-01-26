@@ -18,6 +18,28 @@ func AddArticleHistory(articleId string, date string, content string) error {
 	return db.Connection.Create(articleHistory).Error
 }
 
+func GetArticeHistoryDatesById(articeId string) []string {
+	db := database.GetDatabaseInstance()
+
+	articleHistorys := []entitys.ArticleHistory{}
+	db.Connection.Where("article_id = ?", articeId).Find(&articleHistorys)
+
+	dates := []string{}
+
+	for _, history := range articleHistorys {
+		dates = append(dates, history.Date)
+	}
+	return dates
+}
+
+func GetArticleHistory(articleId string, date string) entitys.ArticleHistory {
+	db := database.GetDatabaseInstance()
+
+	articleHistory := entitys.ArticleHistory{}
+	db.Connection.Where("article_id = ? AND date = ?", articleId, date).Find(&articleHistory)
+	return articleHistory
+}
+
 func ArchiveArticleHistory() {
 	t := time.Now()
 	subDay, _ := time.ParseDuration("-24h")

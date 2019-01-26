@@ -18,6 +18,24 @@ func CreateArticle(title string, content string, userId string) (*entitys.Articl
 	return article, error
 }
 
+func SearchArticleByUserId(userId string, matchStr string) []entitys.Article {
+	db := database.GetDatabaseInstance()
+
+	articles := []entitys.Article{}
+
+	db.Connection.Where("creator_id = ? AND content like ?", userId, "%"+matchStr+"%").Find(&articles)
+	return articles
+}
+
+func CheckArticleBelongUser(userId string, articleId string) bool {
+	db := database.GetDatabaseInstance()
+
+	article := new(entitys.Article)
+
+	db.Connection.Where("creator_id = ? AND id = ?", userId, articleId).First(&article)
+	return article.ID != ""
+}
+
 func GetArticlesByUser(userId string) []entitys.Article {
 	db := database.GetDatabaseInstance()
 
@@ -31,6 +49,14 @@ func GetArticleById(articleId string) (entitys.Article, error) {
 
 	article := entitys.Article{}
 	error := db.Connection.Where("id = ?", articleId).First(&article).Error
+	return article, error
+}
+
+func GetArticleByIdAndUserId(userId string, articleId string) (entitys.Article, error) {
+	db := database.GetDatabaseInstance()
+
+	article := entitys.Article{}
+	error := db.Connection.Where("id = ? AND creator_id = ?", articleId, userId).First(&article).Error
 	return article, error
 }
 

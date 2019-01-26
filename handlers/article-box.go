@@ -1,16 +1,15 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"wood-serve/models"
+	"wood-serve/domain"
 
 	"github.com/labstack/echo"
 )
 
-func PostArticleBox(db *sql.DB) echo.HandlerFunc {
+func PostArticleBox() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
@@ -22,21 +21,22 @@ func PostArticleBox(db *sql.DB) echo.HandlerFunc {
 
 		c.Bind(&request)
 
-		id := models.CreateArticleBox(db, userId, request.Name)
+		error := domain.AddArticleBox(userId, request.Name)
 
-		return c.JSON(http.StatusCreated, H{
-			"id": id,
-		})
+		if error != nil {
+			return error
+		}
+		return c.NoContent(http.StatusCreated)
 	}
 }
 
-func GetArticleBoxs(db *sql.DB) echo.HandlerFunc {
+func GetArticleBoxes() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
 		userId := claims["id"].(string)
 
-		articleBoxs := models.GetArticleBoxs(db, userId).ArticleBoxs
+		articleBoxs := domain.GetArticleBoxes(userId)
 
 		return c.JSON(http.StatusOK, articleBoxs)
 	}

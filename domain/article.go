@@ -26,6 +26,14 @@ func GetArticlesByUser(userId string) []entitys.Article {
 	return articles
 }
 
+func GetArticleById(articleId string) (entitys.Article, error) {
+	db := database.GetDatabaseInstance()
+
+	article := entitys.Article{}
+	error := db.Connection.Where("id = ?", articleId).First(&article).Error
+	return article, error
+}
+
 func GetAllArticleModifyTody() ([]entitys.Article, error) {
 	db := database.GetDatabaseInstance()
 

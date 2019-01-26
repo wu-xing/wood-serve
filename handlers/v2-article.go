@@ -4,9 +4,6 @@ import (
 	"database/sql"
 	"net/http"
 
-	// "time"
-	"fmt"
-
 	"github.com/dgrijalva/jwt-go"
 	"wood-serve/domain"
 	"wood-serve/models"
@@ -30,12 +27,15 @@ func V2GetArticles(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func V2GetShareArticle(db *sql.DB) echo.HandlerFunc {
+func V2GetShareArticle() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		articleId := c.Param("id")
 
-		article := models.GetArticle(db, articleId)
-		fmt.Println(article.IsPublic)
+		article, error := domain.GetArticleById(articleId)
+
+		if error != nil {
+			return error
+		}
 
 		if !article.IsPublic || article.IsEncryption {
 			return c.NoContent(http.StatusUnauthorized)

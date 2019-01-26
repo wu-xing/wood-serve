@@ -119,6 +119,7 @@ func main() {
 	e.POST("/captcha", handlers.GenCaptcha(db))
 
 	e.GET("/share/article/:id", handlers.GetShareArticle(db))
+	e.GET("/v2/share/article/:id", handlers.V2GetShareArticle())
 
 	r := e.Group("/auth")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -131,8 +132,11 @@ func main() {
 	r.PUT("/v2/article/:id", handlers.V2UpdateArticle())
 	// r.POST("/article/encryption/:articleId", handlers.LetArticleEncryption(db))
 	r.POST("/v2/article/encryption/:articleId", handlers.V2LetArticleEncryption())
-	r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
+
+	// r.POST("/article/share/:articleId", handlers.LetArticleShare(db))
+
 	r.POST("/v2/article/share/:articleId", handlers.V2LetArticleShare())
+
 	r.GET("/articles/search/:search", handlers.SearchArticleByMatch(db))
 
 	r.GET("/article/:articleId/history", handlers.GetArticleHistory(db))

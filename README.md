@@ -23,3 +23,9 @@ All configure options here. The prefie is `WOOD_`
 ## deploy 
 ### log
 
+## Know Issue
+
+- `pq: function uuid_generate_v4() does not exist` 
+
+you need grand pg user as SUPERUSER, or use SUPERUSER execute sql `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
+

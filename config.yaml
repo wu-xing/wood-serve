@@ -1,5 +1,5 @@
 IMAGE_DIR: "upload/"
-DISABLE_SIGN_UP: false
+DISABLE_SIGN_UP: true
 
 DB_HOST: "localhost"
 DB_PORT: "5432"

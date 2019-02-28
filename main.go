@@ -68,7 +68,12 @@ func main() {
 	e.GET("/v2/share/article/:id", handlers.V2GetShareArticle())
 
 	r := e.Group("/auth")
-	r.Use(middleware.JWT([]byte("secret")))
+
+	// TODO rename secret
+	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:  []byte("secret"),
+		TokenLookup: "header:App-Authorization",
+	}))
 
 	r.GET("/v2/articles", handlers.V2GetArticles(db))
 	r.POST("/v2/article", handlers.V2PostArticle(db))

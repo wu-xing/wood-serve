@@ -2,26 +2,29 @@ package main
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"os"
 	"wood-serve/database"
-	"wood-serve/models"
+	"wood-serve/domain"
 )
 
 func main() {
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.AddConfigPath(".")      // optionally look for config in the working directory
+	viper.SetEnvPrefix("WOOD")
+	viper.AutomaticEnv()
+	viper.ReadInConfig() // Find and read the config file
+
 	var username string = os.Args[1]
 	var password string = os.Args[2]
 
-	db := database.InitDB("storage.sqlite3")
-	defer db.Close()
+	goDB := database.ConnectDatabase()
+	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
-	user := models.User{}
+	error := domain.CreateUser(username, password)
 
-	user.Username = username
-	user.Password = password
-
-	models.CreateUser(db, &user)
-
-	fmt.Print("Create user successful:")
-	fmt.Print("username: ", username, "\npassword: ", password, "\n")
-
+	if error != nil {
+		fmt.Print("Create user successful:")
+		fmt.Print("username: ", username, "\npassword: ", password, "\n")
+	}
 }

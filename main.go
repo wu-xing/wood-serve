@@ -47,8 +47,6 @@ func main() {
 
 	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{}, &entitys.Image{})
 
-	// migrate(db)
-
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -70,7 +68,7 @@ func main() {
 	r := e.Group("/auth")
 
 	// TODO rename secret
-	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+	r.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey:  []byte("secret"),
 		TokenLookup: "header:App-Authorization",
 	}))

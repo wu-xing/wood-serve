@@ -2,9 +2,9 @@ package domain
 
 import (
 	"fmt"
+	"github.com/fwchen/wood-serve/database"
+	"github.com/fwchen/wood-serve/entitys"
 	"time"
-	"wood-serve/database"
-	"wood-serve/entitys"
 )
 
 func AddArticleHistory(articleId string, date string, content string) error {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"wood-serve/domain"
+	"github.com/fwchen/wood-serve/domain"
 
 	"github.com/labstack/echo"
 )

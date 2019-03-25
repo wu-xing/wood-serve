@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"wood-serve/database"
-	"wood-serve/entitys"
+	"github.com/fwchen/wood-serve/database"
+	"github.com/fwchen/wood-serve/entitys"
 )
 
 func AddArticleBox(userId string, name string) error {

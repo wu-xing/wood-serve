@@ -1,7 +1,7 @@
 package schedulers
 
 import (
-	"wood-serve/domain"
+	"github.com/fwchen/wood-serve/domain"
 )
 
 func LogArticleHistory() {

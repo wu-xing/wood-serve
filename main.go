@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/fwchen/wood-serve/database"
+	"github.com/fwchen/wood-serve/entitys"
+	"github.com/fwchen/wood-serve/handlers"
+	"github.com/fwchen/wood-serve/schedulers"
+	"github.com/fwchen/wood-serve/util"
 	"net/http"
-	"wood-serve/database"
-	"wood-serve/entitys"
-	"wood-serve/handlers"
-	"wood-serve/schedulers"
-	"wood-serve/util"
 
 	"github.com/robfig/cron"
 

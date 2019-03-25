@@ -11,7 +11,7 @@ All configure options here. The prefie is `WOOD_`
 | name            | Description                 | Default     |
 | -----------     | -----------                 | ---------   |
 | IMAGE_DIR       | store uploaded images place | `./upload`  |
-| DISABLE_SIGN_UP | disable sign up flag        | true        |
+| DISABLE_SIGN_UP  | disable sign up flag        | true        |
 | DB_HOST         | database host               | `localhost` |
 
 ## development

@@ -1,9 +1,9 @@
 package domain
 
 import (
+	"github.com/fwchen/wood-serve/database"
+	"github.com/fwchen/wood-serve/entitys"
 	"time"
-	"wood-serve/database"
-	"wood-serve/entitys"
 )
 
 func CreateArticle(title string, content string, userId string) (*entitys.Article, error) {

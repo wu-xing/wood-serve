@@ -3,7 +3,7 @@ package handlers
 import (
 	"database/sql"
 
-	"wood-serve/domain"
+	"github.com/fwchen/wood-serve/domain"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"

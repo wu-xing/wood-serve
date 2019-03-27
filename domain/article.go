@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/fwchen/wood-serve/database"
 	"github.com/fwchen/wood-serve/entitys"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -29,18 +30,17 @@ func SearchArticleByUserId(userId string, matchStr string) []entitys.Article {
 
 func CheckArticleBelongUser(userId string, articleId string) bool {
 	db := database.GetDatabaseInstance()
-
 	article := new(entitys.Article)
-
 	db.Connection.Where("creator_id = ? AND id = ?", userId, articleId).First(&article)
 	return article.ID != ""
 }
 
 func GetArticlesByUser(userId string) []entitys.Article {
 	db := database.GetDatabaseInstance()
-
 	articles := []entitys.Article{}
 	db.Connection.Where("creator_id = ?", userId).Find(&articles)
+
+	log.Info(articles)
 	return articles
 }
 

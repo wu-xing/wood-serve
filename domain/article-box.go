@@ -20,6 +20,6 @@ func GetArticleBoxes(userId string) []entitys.ArticleBox {
 
 	articleBoxes := []entitys.ArticleBox{}
 
-	db.Connection.Model(entitys.ArticleBox{}).Where("creator_id = ?", userId).Find(&articleBoxes)
+	db.Connection.Model(entitys.ArticleBox{}).Where("creator_id = ?", &userId).Find(&articleBoxes)
 	return articleBoxes
 }

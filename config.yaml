@@ -6,3 +6,5 @@ DB_PORT: "5432"
 DB_USER: "postgres"
 DB_NAME: "wood"
 DB_PASSWD: "mysecretpassword"
+
+LOG_FILE: "./wood.log"

@@ -4,6 +4,7 @@ import (
 	"github.com/fwchen/wood-serve/database"
 	"github.com/fwchen/wood-serve/entitys"
 	"github.com/fwchen/wood-serve/handlers"
+	"github.com/fwchen/wood-serve/log"
 	"github.com/fwchen/wood-serve/schedulers"
 	"github.com/fwchen/wood-serve/util"
 	"net/http"
@@ -37,6 +38,8 @@ func main() {
 	util.LogBanner()
 
 	setupReadConfg()
+
+	log.SetupLogger()
 
 	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
 	defer db.Close()

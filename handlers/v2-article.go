@@ -32,7 +32,7 @@ func V2GetShareArticle() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		articleId := c.Param("id")
 
-		article, error := domain.GetArticleById(articleId)
+		article, error := domain.GetArticleByID(articleId)
 
 		if error != nil {
 			return error

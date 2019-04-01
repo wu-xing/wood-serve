@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	log "github.com/fwchen/wood-serve/log"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 
@@ -51,7 +52,8 @@ func ConnectDatabase() *gorm.DB {
 
 	db, err := gorm.Open("postgres", connectConfig)
 
-	// db.LogMode(true)
+	db.SetLogger(log.DBLog)
+	db.LogMode(true)
 
 	if err != nil {
 		panic(err)

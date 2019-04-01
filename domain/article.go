@@ -3,7 +3,7 @@ package domain
 import (
 	"github.com/fwchen/wood-serve/database"
 	"github.com/fwchen/wood-serve/entitys"
-	log "github.com/sirupsen/logrus"
+	log "github.com/fwchen/wood-serve/log"
 	"time"
 )
 
@@ -40,11 +40,12 @@ func GetArticlesByUser(userId string) []entitys.Article {
 	articles := []entitys.Article{}
 	db.Connection.Where("creator_id = ?", userId).Find(&articles)
 
-	log.Info(articles)
+	log.EventLog.Info("user id [" + userId + "] get articles")
+
 	return articles
 }
 
-func GetArticleById(articleId string) (entitys.Article, error) {
+func GetArticleByID(articleId string) (entitys.Article, error) {
 	db := database.GetDatabaseInstance()
 
 	article := entitys.Article{}

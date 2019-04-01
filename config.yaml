@@ -7,4 +7,5 @@ DB_USER: "postgres"
 DB_NAME: "wood"
 DB_PASSWD: "mysecretpassword"
 
-LOG_FILE: "./wood.log"
+EVENT_LOG_FILE: "./wood-event.log"
+DB_LOG_FILE: "./wood-db.log"

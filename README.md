@@ -16,6 +16,8 @@ All configure options here. The prefie is `WOOD_`
 | DB_USER         | databse user                 |             |
 | DB_NAME         | databse name                 |             |
 | DB_PASSWD       | databse passwd               |             |
+| EVENT_LOG_FILE  | event log file path          |  `./wood-event.log` |
+| DB_PASSWD       | databse passwd               |             |
 
 ## development
 

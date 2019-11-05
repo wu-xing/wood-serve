@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	log "github.com/fwchen/wood-serve/log"
+	log "github.com/wu-xing/wood-serve/log"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 

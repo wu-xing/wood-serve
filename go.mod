@@ -1,4 +1,4 @@
-module github.com/fwchen/wood-serve
+module github.com/wu-xing/wood-serve
 
 go 1.12
 

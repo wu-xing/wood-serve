@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/fwchen/wood-serve/database"
-	"github.com/fwchen/wood-serve/domain"
+	"github.com/wu-xing/wood-serve/database"
+	"github.com/wu-xing/wood-serve/domain"
 	"github.com/spf13/viper"
 	"os"
 )

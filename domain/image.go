@@ -7,8 +7,8 @@ import (
 	"errors"
 
 	"bytes"
-	"github.com/fwchen/wood-serve/database"
-	"github.com/fwchen/wood-serve/entitys"
+	"github.com/wu-xing/wood-serve/database"
+	"github.com/wu-xing/wood-serve/entitys"
 	"github.com/spf13/viper"
 	"image"
 	_ "image/gif"

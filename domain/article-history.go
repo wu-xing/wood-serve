@@ -2,8 +2,8 @@ package domain
 
 import (
 	"fmt"
-	"github.com/fwchen/wood-serve/database"
-	"github.com/fwchen/wood-serve/entitys"
+	"github.com/wu-xing/wood-serve/database"
+	"github.com/wu-xing/wood-serve/entitys"
 	"time"
 )
 

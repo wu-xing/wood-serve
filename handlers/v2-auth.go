@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/fwchen/wood-serve/domain"
+	"github.com/wu-xing/wood-serve/domain"
 	"net/http"
 
 	"github.com/dchest/captcha"

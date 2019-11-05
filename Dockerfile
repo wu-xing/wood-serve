@@ -1,6 +1,6 @@
 FROM golang:1.12.1-stretch
 
-WORKDIR /go/src/github.com/fwchen
+WORKDIR /go/src/github.com/wu-xing
 
 COPY . .
 
@@ -10,4 +10,4 @@ RUN go get
 
 RUN go build main.go
 
-CMD ["/go/src/github.com/fwchen/main"]
+CMD ["/go/src/github.com/wu-xing/main"]

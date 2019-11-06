@@ -1,16 +1,15 @@
 package handlers
 
 import (
-	"database/sql"
-
 	"github.com/wu-xing/wood-serve/domain"
+
+	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
-	"net/http"
 )
 
-func PostImageByBase64(db *sql.DB) echo.HandlerFunc {
+func PostImageByBase64() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)

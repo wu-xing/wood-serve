@@ -3,9 +3,10 @@ package handlers
 import (
 	"time"
 
+	"net/http"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/wu-xing/wood-serve/domain"
-	"net/http"
 
 	"github.com/dchest/captcha"
 	"github.com/spf13/viper"

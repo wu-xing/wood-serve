@@ -3,24 +3,19 @@ package main
 import (
 	"github.com/wu-xing/wood-serve/database"
 	"github.com/wu-xing/wood-serve/entitys"
-	"github.com/wu-xing/wood-serve/handlers"
 	"github.com/wu-xing/wood-serve/log"
 	"github.com/wu-xing/wood-serve/schedulers"
 	"github.com/wu-xing/wood-serve/util"
-	"net/http"
+	"github.com/wu-xing/wood-serve/app/route"
 
 	"github.com/robfig/cron"
 
 	"fmt"
-	"github.com/dchest/captcha"
 	"time"
 
-	_ "github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func setupReadConfg() {
@@ -41,9 +36,6 @@ func main() {
 
 	log.SetupLogger()
 
-	db := database.InitDB("storage.sqlite3?parseTime=true&cache=shared&mode=rwc")
-	defer db.Close()
-
 	goDB := database.ConnectDatabase()
 	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	defer goDB.Close()
@@ -52,48 +44,7 @@ func main() {
 
 	e := echo.New()
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	e.Static("/upload", "upload")
-
-	e.GET("/hello", func(c echo.Context) error {
-		return c.String(http.StatusOK, "hello my firends")
-	})
-	e.POST("/v2/signin", handlers.V2SignIn())
-	e.POST("/v2/signup", handlers.V2SignUp())
-
-	e.GET("/captcha/*", echo.WrapHandler(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
-	e.POST("/captcha", handlers.GenCaptcha(db))
-
-	e.GET("/v2/share/article/:id", handlers.V2GetShareArticle())
-
-	r := e.Group("/auth")
-
-	// TODO rename secret
-	r.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey:  []byte("secret"),
-		TokenLookup: "header:App-Authorization",
-	}))
-
-	r.GET("/v2/articles", handlers.V2GetArticles(db))
-	r.POST("/v2/article", handlers.V2PostArticle(db))
-	r.PUT("/v2/article/:id", handlers.V2UpdateArticle())
-	r.POST("/v2/article/encryption/:articleId", handlers.V2LetArticleEncryption())
-
-	r.POST("/v2/article/share/:articleId", handlers.V2LetArticleShare())
-
-	r.GET("/articles/search/:search", handlers.V2SearchArticleByMatch())
-
-	r.GET("/article/:articleId/history", handlers.V2GetArticleHistory())
-	r.GET("/article/:articleId/history/:date", handlers.V2GetHistoryArticleByDate())
-
-	r.POST("/article-box", handlers.PostArticleBox())
-	r.GET("/article-boxes", handlers.GetArticleBoxes())
-
-	r.POST("/image/base64", handlers.PostImageByBase64(db))
-
-	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
+	route.InitRoutes(e)
 
 	c := cron.New()
 
@@ -105,6 +56,8 @@ func main() {
 	})
 
 	c.Start()
+
+	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	t := time.Now()
 	fmt.Println("🔥  WOOD SERVER LUNCHED🔥")

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -12,7 +11,7 @@ import (
 
 type H map[string]interface{}
 
-func V2GetArticles(db *sql.DB) echo.HandlerFunc {
+func V2GetArticles() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userId := c.QueryParam("userId")
 
@@ -134,7 +133,7 @@ func V2LetArticleShare() echo.HandlerFunc {
 	}
 }
 
-func V2PostArticle(db *sql.DB) echo.HandlerFunc {
+func V2PostArticle() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		user := c.Get("user").(*jwt.Token)

@@ -20,8 +20,7 @@ require (
 	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.0.9
 	github.com/mattn/go-isatty v0.0.3
-	github.com/mattn/go-sqlite3 v1.6.0
-	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967 // indirect
+	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.0
 	github.com/spf13/viper v1.3.2

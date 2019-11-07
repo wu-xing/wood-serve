@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/wu-xing/wood-serve/app/route"
 	"github.com/wu-xing/wood-serve/database"
 	"github.com/wu-xing/wood-serve/entitys"
 	"github.com/wu-xing/wood-serve/log"
 	"github.com/wu-xing/wood-serve/schedulers"
 	"github.com/wu-xing/wood-serve/util"
-	"github.com/wu-xing/wood-serve/app/route"
 
 	"github.com/robfig/cron"
 
@@ -60,7 +60,7 @@ func main() {
 	fmt.Println("jellyfish serve on http://0.0.0.0:8020")
 
 	t := time.Now()
-	fmt.Println("🔥  WOOD SERVER LUNCHED🔥")
+	fmt.Println("🔥  WOOD SERVER LUNCHED  🔥")
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
 
 	e.Logger.Fatal(e.Start("0.0.0.0:" + "8020"))

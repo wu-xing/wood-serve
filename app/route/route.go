@@ -6,7 +6,7 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/labstack/echo/middleware"
 	_ "github.com/labstack/gommon/log"
-	"github.com/wu-xing/wood-serve/handlers"
+	"github.com/wu-xing/wood-serve/app/handlers"
 
 	"github.com/labstack/echo"
 )

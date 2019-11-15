@@ -10,15 +10,15 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-type DatabaseInstance struct {
+type DB struct {
 	Connection *gorm.DB
 }
 
-var dbInstance *DatabaseInstance
+var dbInstance *DB
 
-func GetDatabaseInstance() *DatabaseInstance {
+func GetDatabaseInstance() *DB {
 	if dbInstance == nil {
-		dbInstance = new(DatabaseInstance)
+		dbInstance = new(DB)
 		dbInstance.Connection = ConnectDatabase()
 	}
 	return dbInstance

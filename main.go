@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/wu-xing/wood-serve/app/route"
 	"github.com/wu-xing/wood-serve/database"
+	"github.com/wu-xing/wood-serve/database/migration"
+	"github.com/wu-xing/wood-serve/domain/config"
 	"github.com/wu-xing/wood-serve/entitys"
 	"github.com/wu-xing/wood-serve/log"
 	"github.com/wu-xing/wood-serve/schedulers"
@@ -36,11 +38,12 @@ func main() {
 
 	log.SetupLogger()
 
-	goDB := database.ConnectDatabase()
-	goDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-	defer goDB.Close()
+	db := database.GetDatabaseInstance()
+	db.Connection.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+	defer db.Connection.Close()
 
-	goDB.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{}, &entitys.Image{})
+	db.Connection.AutoMigrate(&entitys.ArticleBox{}, &entitys.Article{}, &entitys.User{}, &entitys.ArticleHistory{}, &entitys.Image{}, &config.AppConfig{})
+	migration.AppMigration()
 
 	e := echo.New()
 

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"github.com/wu-xing/wood-serve/domain/config"
 	"net/http"
 
 	"github.com/dchest/captcha"
@@ -27,6 +28,9 @@ func InitRoutes(e *echo.Echo) {
 	e.POST("/captcha", handlers.GenCaptcha())
 
 	e.GET("/v2/share/article/:id", handlers.V2GetShareArticle())
+
+	configGroup := e.Group("")
+	config.RegisterHandler(configGroup)
 
 	r := e.Group("/auth")
 

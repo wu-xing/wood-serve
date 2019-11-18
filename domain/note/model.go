@@ -5,8 +5,3 @@ type Note struct {
 	Title string
 	Body  string
 }
-
-// Init note.
-func New() {
-
-}

@@ -1,7 +1,7 @@
 IMAGE_DIR: "upload/"
 DISABLE_SIGN_UP: False
 
-DB_HOST: "192.168.50.251"
+DB_HOST: "localhost"
 DB_PORT: "5432"
 DB_USER: "postgres"
 DB_NAME: "wood"
